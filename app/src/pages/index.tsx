@@ -13,9 +13,11 @@ import {
 import { FiMonitor, FiBookOpen, FiActivity, FiCamera, FiPaperclip, FiList } from 'react-icons/fi';
 import { QuestionIcon } from '@chakra-ui/icons';
 import { Navbar } from '@/components/Navbar';
+import { useRouter } from 'next/router';
 
 const WorkshopLandingPage = () => {
 
+  const router = useRouter()
   return (
     <>
       <Navbar />
@@ -41,6 +43,7 @@ const WorkshopLandingPage = () => {
             borderRadius="1rem"
             fontSize="2rem"
             padding="2rem 3rem"
+            onClick={() => router.push("/new")}
             zIndex={100}
             _hover={{background:"#9A91FF"}}
           >

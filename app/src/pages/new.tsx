@@ -42,7 +42,6 @@ const WorkshopLandingPage = () => {
             fontSize: "1.3rem"
           }} placeholder="Title" borderColor="lightgray" bg="transparent" />
           <Text textAlign="start" fontSize="1.4rem" color="#838DE9" fontWeight={600} w="100%">Date</Text>
->
 
           <DateTimePicker className="picker" calendarClassName="calender" onChange={() => { }} value={new Date()} />
 

@@ -35,6 +35,27 @@ a {
   border: 1px solid #34394D !important;
 }
 
+.react-datetime-picker__calendar {
+  background: red !important;
+  z-index: 10000 !important;
+  
+}
+.react-calendar__month-view__days > button:hover {
+  background-color: #28293f !important;
+}
+.react-datetime-picker__clock {
+  background: #28293f !important;
+  border: none !important;
+  border-radius: 10px !important;
+}
+.react-clock__face {
+  background-color: white !important;
+}
+.react-calendar {
+  background-color: #191A2B !important;
+  border: none !important;
+  z-index: 1000 !important;
+}
 .react-datetime-picker__wrapper {
   border: 1px solid #34394D !important;
   border-radius: 0.7rem !important;
@@ -43,7 +64,6 @@ a {
 }
 
 .react-datetime-picker__inputGroup > input {
-  width: 25px !important;
 }
 .picker {
   color: white !important;

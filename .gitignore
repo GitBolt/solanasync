@@ -1,0 +1,9 @@
+app/node_modules
+app/.next
+
+node_modules
+test-ledger
+.next
+app/.next/cache
+app/cache
+.env

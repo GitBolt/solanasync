@@ -23,6 +23,7 @@ export default async function handler(
 
   if (req.method === 'POST') {
     try {
+      console.log(req.query, "\n\n", req.body)
       const { account } = req.body;
       const { workshopId } = req.query
 

@@ -26,7 +26,7 @@ const GaslessSolanaPayNFT = () => {
         if (workshop.cNFTMetadata) {
           setError(false)
           setNftDetails(workshop.cNFTMetadata);
-          setQrCodeValue("solana:" + encodeURIComponent(`https://solanasync.com/api/mint?id=${workshopId}`));
+          setQrCodeValue("solana:" + encodeURIComponent(`https://solanasync.com/api/mint?workshopId=${workshopId}`));
         } else {
           setError(true);
         }

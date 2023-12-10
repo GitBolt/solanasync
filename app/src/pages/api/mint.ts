@@ -26,18 +26,24 @@ export default async function handler(
     try {
       const { account } = req.body;
       const { workshopId } = req.query
-      
+
       if (!account) {
         res.status(400).json({ error: 'No account provided' });
         return;
       }
 
+      console.log("Getting Connection")
+      const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://api.devnet.solana.com");
+
       const user = new anchor.web3.PublicKey(account);
-      const CONNECTION = new anchor.web3.Connection(process.env.RPC_URL as string || "https://api.devnet.solana.com");
-      const PAYER = anchor.web3.Keypair.fromSecretKey(
+
+      console.log("User: ", user.toBase58())
+
+      const payer = anchor.web3.Keypair.fromSecretKey(
         new Uint8Array(JSON.parse(process.env.GAS_KEY as string))
       );
       const reference = anchor.web3.Keypair.generate();
+      console.log("Ref: ", reference.publicKey.toBase58())
 
       const nftMetadata: MetadataArgs = {
         name: "NFT NAME",
@@ -45,7 +51,7 @@ export default async function handler(
         uri: "NFT METADATA URL",
         creators: [
           {
-            address: PAYER.publicKey,
+            address: payer.publicKey,
             verified: false,
             share: 100,
           },
@@ -65,9 +71,12 @@ export default async function handler(
       if (!workshop) {
         return res.status(400).json({ error: "Workshop does not exist" })
       }
+
+      console.log("Found Workshop. Minting Compressed NFT Ix")
+
       const transaction = await mintCompressedNft(
         reference.publicKey,
-        PAYER.publicKey,
+        payer.publicKey,
         new anchor.web3.PublicKey(workshop.cNFTMetadata.merkleTreeAddress!),
         new anchor.web3.PublicKey(workshop.cNFTMetadata.mintAccount!),
         new anchor.web3.PublicKey(workshop.cNFTMetadata.metadataAccount!),
@@ -82,20 +91,23 @@ export default async function handler(
         return;
       }
 
-      const { blockhash, lastValidBlockHeight } = await CONNECTION.getLatestBlockhash();
-      transaction.feePayer = PAYER.publicKey;
+      console.log("Got Mint Tx")
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+      console.log("Blockhash: ", blockhash)
+
+      transaction.feePayer = payer.publicKey;
       transaction.recentBlockhash = blockhash;
       transaction.lastValidBlockHeight = lastValidBlockHeight;
-      transaction.partialSign(PAYER);
+      transaction.partialSign(payer);
 
-      console.log("Signed Gasless")
+      console.error("Signed Gasless")
 
       const serializedTransaction = transaction.serialize({
         requireAllSignatures: false,
       });
       const base64 = serializedTransaction.toString("base64");
 
-      console.log("Serialized", base64)
+      console.error("Serialized", base64)
 
       res.status(200).json({
         transaction: base64,

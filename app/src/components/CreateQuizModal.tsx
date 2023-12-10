@@ -14,9 +14,14 @@ import {
   IconButton,
   Icon,
   Text,
+  useToast,
+  Box,
+  Link,
 } from '@chakra-ui/react';
 import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons';
-import { FaQuestionCircle, FaSave } from 'react-icons/fa';
+import { FaCheck, FaLink, FaQuestionCircle, FaSave } from 'react-icons/fa';
+import { uploadJson } from '@/util/storage';
+import { useCustomToast } from '@/hooks/toast';
 
 type Question = {
   question: string;
@@ -25,6 +30,8 @@ type Question = {
 };
 
 const CreateQuizModal: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const toast = useCustomToast()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [questions, setQuestions] = useState<Question[]>([
     { question: '', options: ['', '', '', ''], correctOptionIndex: null },
@@ -55,6 +62,23 @@ const CreateQuizModal: React.FC = () => {
     newQuestions[qIndex].correctOptionIndex = oIndex;
     setQuestions(newQuestions);
   };
+
+
+  const saveQuiz = async () => {
+
+    if (questions.length == 0 || questions[0].question == '') {
+      return toast({
+        type: "error",
+        message: "Quiz Cant't Be Empty"
+      })
+    }
+    setLoading(true)
+    const res = await uploadJson(JSON.stringify(questions))
+    if (true) {
+      toast({ type: "success", message: "Link Uploaded", linkTitle: "See On-Chain Quiz Details", link: res })
+      setLoading(false)
+    }
+  }
 
   return (
     <>
@@ -118,7 +142,9 @@ const CreateQuizModal: React.FC = () => {
               <Button _hover={{ bg: "#5F54D8" }} leftIcon={<AddIcon />} bg="#5F54D8" onClick={addQuestion}>
                 Add Question
               </Button>
-              <Button _hover={{ bg: "green" }} alignSelf="center" w="30%" fontSize="1.2rem" height="3rem" rightIcon={<FaSave />} bg="#318151" onClick={() => { }}>
+              <Button
+                isDisabled={loading}
+                _hover={{ bg: "green" }} alignSelf="center" w="30%" fontSize="1.2rem" height="3rem" rightIcon={<FaSave />} bg="#318151" onClick={saveQuiz}>
                 Save Quiz
               </Button>
             </VStack>

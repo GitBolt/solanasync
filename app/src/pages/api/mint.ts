@@ -23,7 +23,6 @@ export default async function handler(
 
   if (req.method === 'POST') {
     try {
-      console.log(req.query, "\n\n", req.body)
       const { account } = req.body;
       const { workshopId } = req.query
 
@@ -68,7 +67,9 @@ export default async function handler(
 
       console.log("Metadata ready")
 
+      console.log("Workshop Id: ", workshopId)
       const workshop = await Workshop.findOne({ _id: workshopId })
+      console.log("Workshop From Db: ", workshop)
       if (!workshop) {
         return res.status(400).json({ error: "Workshop does not exist" })
       }

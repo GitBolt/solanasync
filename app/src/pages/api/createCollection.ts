@@ -4,7 +4,6 @@ import { ValidDepthSizePair } from '@solana/spl-account-compression';
 import { createCollection, createTree } from '@/util/cnft/utils';
 import { CreateMetadataAccountArgsV3 } from '@metaplex-foundation/mpl-token-metadata';
 import { web3 } from '@coral-xyz/anchor';
-import mongoose from 'mongoose';
 import { Workshop } from '@/util/schema';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

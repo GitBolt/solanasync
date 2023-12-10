@@ -6,7 +6,6 @@ import {
 } from '@metaplex-foundation/mpl-bubblegum';
 import * as anchor from '@project-serum/anchor';
 import { mintCompressedNft } from '@/util/cnft/mint';
-import mongoose from 'mongoose';
 import { Workshop } from '@/util/schema';
 
 export default async function handler(
@@ -66,8 +65,9 @@ export default async function handler(
         tokenStandard: TokenStandard.NonFungible,
       };
 
+      console.log("Metadata ready")
 
-      const workshop = await Workshop.findOne({ id: workshopId })
+      const workshop = await Workshop.findOne({ _id: workshopId })
       if (!workshop) {
         return res.status(400).json({ error: "Workshop does not exist" })
       }

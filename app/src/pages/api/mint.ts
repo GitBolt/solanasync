@@ -88,10 +88,14 @@ export default async function handler(
       transaction.lastValidBlockHeight = lastValidBlockHeight;
       transaction.partialSign(PAYER);
 
+      console.log("Signed Gasless")
+
       const serializedTransaction = transaction.serialize({
         requireAllSignatures: false,
       });
       const base64 = serializedTransaction.toString("base64");
+
+      console.log("Serialized", base64)
 
       res.status(200).json({
         transaction: base64,

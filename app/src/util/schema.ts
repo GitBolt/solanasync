@@ -6,7 +6,7 @@ const UserSchema = new Schema({
 });
 
 
-const User = mongoose.model('User', UserSchema)
+const User = mongoose.models.User || mongoose.model('User', UserSchema)
 
 
 const WorkshopSchema = new Schema({
@@ -20,6 +20,6 @@ const WorkshopSchema = new Schema({
 });
 
 
-const Workshop = mongoose.model('Workshop', WorkshopSchema)
+const Workshop = mongoose.models.Workshop || mongoose.model('Workshop', WorkshopSchema) 
 
-export { User, Workshop }
+export { User, Workshop, WorkshopSchema }

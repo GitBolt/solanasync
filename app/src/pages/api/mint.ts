@@ -7,6 +7,7 @@ import {
 import * as anchor from '@project-serum/anchor';
 import { mintCompressedNft } from '@/util/cnft/mint';
 import mongoose from 'mongoose';
+import { Workshop } from '@/util/schema';
 
 export default async function handler(
   req: NextApiRequest,
@@ -60,7 +61,7 @@ export default async function handler(
       };
 
 
-      const workshop = await mongoose.models.Workshop.findOne({ id: workshopId })
+      const workshop = await Workshop.findOne({ id: workshopId })
       if (!workshop) {
         return res.status(400).json({ error: "Workshop does not exist" })
       }

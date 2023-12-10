@@ -5,6 +5,7 @@ import { createCollection, createTree } from '@/util/cnft/utils';
 import { CreateMetadataAccountArgsV3 } from '@metaplex-foundation/mpl-token-metadata';
 import { web3 } from '@coral-xyz/anchor';
 import mongoose from 'mongoose';
+import { Workshop } from '@/util/schema';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const collection = await createCollection(connection, payer, collectionMetadataV3);
 
       console.log(collection)
-      await mongoose.models.Workshop.updateOne(
+      await Workshop.updateOne(
         { _id: workshopId },
         {
           $set: {

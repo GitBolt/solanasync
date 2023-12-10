@@ -27,7 +27,7 @@ export default async function handler(
   try {
     await dbConnect();
 
-    const workshop = await mongoose.models.Workshop.findOne({ _id: id});
+    const workshop = await Workshop.findOne({ _id: id});
 
     if (!workshop) {
       return res.status(404).json({ message: 'Workshop not found' });

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
 import dbConnect from '@/util/db';
+import { User } from '@/util/schema';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -12,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!publicKey) {
         return res.status(400).json({ message: 'Public Key is required' });
       }
-      const newUser = new mongoose.models.User({ publicKey });
+      const newUser = new User({ publicKey });
       await newUser.save();
 
       res.status(200).json({ message: 'Created User' });

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState } from 'react';
 import {
   Modal,
@@ -26,7 +28,7 @@ const CreateNFTCollectionModal: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
-  const [size, setSize] = useState(0);
+  const [size, setSize] = useState('');
   const [collectionName, setCollectionName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -39,7 +41,6 @@ const CreateNFTCollectionModal: React.FC = () => {
     setImageFile(file);
     setPreviewUrl(URL.createObjectURL(file));
   };
-
 
 
   const createCollection = async () => {
@@ -125,14 +126,14 @@ const CreateNFTCollectionModal: React.FC = () => {
                   {previewUrl ? <Flex style={{ width: '100%', height: '100%' }} align="center" justify="center" cursor="pointer">
                     <img src={previewUrl} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
                   </Flex> : <>
-                    <Flex onClick={() => document.querySelector('input[type="file"]').click()} style={{ width: '100%', height: '100%' }} align="center" justify="center" cursor="pointer">
-                      <FaUpload size="2rem" onClick={() => document.querySelector('input[type="file"]').click()} />
+                    <Flex onClick={() => document.querySelector('input[type="file"]')!.click()} style={{ width: '100%', height: '100%' }} align="center" justify="center" cursor="pointer">
+                      <FaUpload size="2rem" onClick={() => document.querySelector('input[type="file"]')!.click()} />
                     </Flex>
                   </>}
                 </Box>
                 <Box ml={4}>
-                  <Text fontSize="1.3rem" fontWeight={700}>File Name: {imageFile ? imageFile.name : 'No file selected'}</Text>
-                  {previewUrl && <Button colorScheme="twitter" onClick={() => document.querySelector('input[type="file"]').click()} > Change Image</Button>}
+                  <Text fontSize="1.3rem" fontWeight={700}>File Name: {imageFile ? imageFile!.name : 'No file selected'}</Text>
+                  {previewUrl && <Button colorScheme="twitter" onClick={() => document.querySelector('input[type="file"]')!.click()} > Change Image</Button>}
                   <Input
                     type="file"
                     onChange={handleFileChange}

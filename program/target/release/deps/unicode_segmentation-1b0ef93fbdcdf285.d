@@ -1,0 +1,11 @@
+/home/bolt/Desktop/solanasync/program/target/release/deps/unicode_segmentation-1b0ef93fbdcdf285.rmeta: /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/lib.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/grapheme.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/sentence.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/word.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/tables.rs
+
+/home/bolt/Desktop/solanasync/program/target/release/deps/libunicode_segmentation-1b0ef93fbdcdf285.rlib: /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/lib.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/grapheme.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/sentence.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/word.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/tables.rs
+
+/home/bolt/Desktop/solanasync/program/target/release/deps/unicode_segmentation-1b0ef93fbdcdf285.d: /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/lib.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/grapheme.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/sentence.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/word.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/tables.rs
+
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/lib.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/grapheme.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/sentence.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/word.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.10.1/src/tables.rs:

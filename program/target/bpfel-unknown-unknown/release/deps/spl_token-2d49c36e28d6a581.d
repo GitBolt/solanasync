@@ -1,0 +1,12 @@
+/home/bolt/Desktop/solanasync/program/target/bpfel-unknown-unknown/release/deps/spl_token-2d49c36e28d6a581.so: /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/lib.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/error.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/instruction.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/native_mint.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/processor.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/state.rs
+
+/home/bolt/Desktop/solanasync/program/target/bpfel-unknown-unknown/release/deps/libspl_token-2d49c36e28d6a581.rlib: /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/lib.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/error.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/instruction.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/native_mint.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/processor.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/state.rs
+
+/home/bolt/Desktop/solanasync/program/target/bpfel-unknown-unknown/release/deps/spl_token-2d49c36e28d6a581.d: /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/lib.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/error.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/instruction.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/native_mint.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/processor.rs /home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/state.rs
+
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/lib.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/error.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/instruction.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/native_mint.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/processor.rs:
+/home/bolt/.cargo/registry/src/github.com-1ecc6299db9ec823/spl-token-3.5.0/src/state.rs:

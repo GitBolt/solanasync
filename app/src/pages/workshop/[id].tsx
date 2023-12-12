@@ -3,6 +3,7 @@ import { Box, Button, Flex, Heading, Text, Icon, VStack } from '@chakra-ui/react
 import { FaQuestionCircle, FaQrcode, FaLink } from 'react-icons/fa';
 import { Navbar } from '@/components/Navbar';
 import CreateQuizModal from '@/components/CreateQuizModal';
+import CreateNFTCollectionModal from '@/components/CreateNFTModal';
 
 const workshopName = "IITD"
 const location = "NYC"
@@ -37,9 +38,7 @@ const WorkshopPage = () => (
             <VStack spacing={6} mt="5rem" w="100%" align="center">
                 <Flex justify="space-evenly" gap="2rem">
                     <CreateQuizModal />
-                    <Button rounded="2rem" leftIcon={<Icon as={FaQrcode} />} bg="#5F54D8" w="22rem" h="6rem" fontSize="2rem" colorScheme="voilet">
-                        Create NFT QR
-                    </Button>
+                    <CreateNFTCollectionModal />
                 </Flex>
                 <Button rounded="2rem" leftIcon={<Icon as={FaLink} />} w="40%" bg="#5F54D8" h="6rem" fontSize="2rem" colorScheme="voilet">
                     Add Important Links

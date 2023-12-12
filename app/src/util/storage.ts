@@ -19,3 +19,26 @@ export const uploadJson = async (object: string) => {
     return undefined;
   }
 };
+
+export const uploadFile = async (image: any) => {
+  const token = process.env.NEXT_PUBLIC_STORAGE_KEY as string
+  const client = new NFTStorage({ token });
+
+  let uploadFile = image
+  if (image.blob) {
+    const fileName = `image_blob.jpeg`;
+    const fileType = 'image/jpeg';
+    uploadFile = new File([image.blob], fileName, { type: fileType });
+  }
+  console.log(`Uploading image: ${uploadFile.name}`);
+  const metadata = await client.store({
+    name: 'My sweet NFT',
+    description: "Just try to funge it. You can't do it.",
+    image,
+  });
+  const rawURL = metadata.embed().image;
+  const masala = rawURL.toString().split('/ipfs/')[1];
+  const imageURL = `https://ipfs.io/ipfs/${masala}`;
+  console.log(`🎉 Uploaded Image: ${imageURL}`);
+  return imageURL;
+};

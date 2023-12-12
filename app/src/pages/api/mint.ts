@@ -32,7 +32,7 @@ export default async function handler(
       }
 
       console.log("Getting Connection")
-      const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://api.devnet.solana.com");
+      const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://api.devnet.solana.com", "processed");
 
       const user = new anchor.web3.PublicKey(account);
 

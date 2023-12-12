@@ -3,6 +3,7 @@ import { Box, Button, Flex, Heading, VStack, HStack, Text, Icon, Grid, LinkBox, 
 import { Navbar } from '@/components/Navbar';
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useRouter } from 'next/router';
 
 type Props = {
   title: string,
@@ -41,14 +42,16 @@ const WorkshopItem = ({ title, date, location, id }: Props) => (
 const WorkshopLandingPage = () => {
   const [workshops, setWorkshops] = useState([]);
   const { publicKey } = useWallet();
-
+  const router = useRouter()
   useEffect(() => {
+    
     const fetchWorkshops = async () => {
       if (!publicKey) return;
       try {
         const response = await fetch(`/api/workshops/${publicKey}`);
         const data = await response.json();
-        setWorkshops(data.workshops);
+        const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        setWorkshops(sortedWorkshops);
       } catch (error) {
         console.error('Error fetching workshops:', error);
       }
@@ -78,6 +81,7 @@ const WorkshopLandingPage = () => {
             fontSize="1.5rem"
             height="3rem"
             padding="1rem 2rem"
+            onClick={() => router.push("/new")}
             _hover={{ background: "#9A91FF" }}
           >
             New Workshop

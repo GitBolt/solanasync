@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -9,15 +9,31 @@ import {
   useColorModeValue,
   VStack
 } from '@chakra-ui/react';
-// Import icons from Chakra UI
 import { FiMonitor, FiBookOpen, FiActivity, FiCamera, FiPaperclip, FiList } from 'react-icons/fi';
-import { QuestionIcon } from '@chakra-ui/icons';
 import { Navbar } from '@/components/Navbar';
 import { useRouter } from 'next/router';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const WorkshopLandingPage = () => {
-
+  const [workshopsExist, setWorkshopsExist] = useState<boolean>(false)
+  const { publicKey } = useWallet()
   const router = useRouter()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setWorkshopsExist(false)
+      if (publicKey) {
+        const workshops = await fetch("/workshops/" + publicKey)
+        const res = await workshops.json()
+        if (res || res.length) {
+          setWorkshopsExist(true)
+        } else {
+          setWorkshopsExist(false)
+        }
+      }
+      fetchData()
+    }
+  }, [publicKey])
   return (
     <>
       <Navbar />
@@ -43,11 +59,11 @@ const WorkshopLandingPage = () => {
             borderRadius="1rem"
             fontSize="2rem"
             padding="2rem 3rem"
-            onClick={() => router.push("/new")}
+            onClick={() => router.push(workshopsExist ? "/new" : "/dashboard")}
             zIndex={100}
-            _hover={{background:"#9A91FF"}}
+            _hover={{ background: "#9A91FF" }}
           >
-            New Workshop
+            {workshopsExist ? 'New Workshop' : 'Go to Dashboard'}
           </Button>
         </VStack>
 

@@ -1,5 +1,4 @@
 import { Workshop } from '@/util/schema';
-import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

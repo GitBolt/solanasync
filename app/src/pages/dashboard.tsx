@@ -1,10 +1,18 @@
-import React from 'react';
-import { Box, Button, Flex, Heading, VStack, HStack, Text, Icon, Grid } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Flex, Heading, VStack, HStack, Text, Icon, Grid, LinkBox, LinkOverlay } from '@chakra-ui/react';
 import { Navbar } from '@/components/Navbar';
-import {FaCalendarAlt, FaMapMarkerAlt} from 'react-icons/fa'
+import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { useWallet } from '@solana/wallet-adapter-react';
 
-const WorkshopItem = ({ title, date, location }: any) => (
-  <Box
+type Props = {
+  title: string,
+  date: string,
+  location: string,
+  id: string,
+}
+
+const WorkshopItem = ({ title, date, location, id }: Props) => (
+  <LinkBox
     w="100%"
     p={4}
     mb={4}
@@ -16,32 +24,38 @@ const WorkshopItem = ({ title, date, location }: any) => (
     borderRadius="1rem"
     border="1px solid #191A2B"
   >
-    <Text fontSize="1.5rem" color="white" mb={2}>{title}</Text>
+    <LinkOverlay href={"/workshop/" + id}>
+      <Text fontSize="1.5rem" color="white" mb={2}>{title}</Text>
+    </LinkOverlay>
     <Flex alignItems="center" mb={1}>
       <Icon as={FaCalendarAlt} color="#838DE9" mr={2} />
-      <Text fontSize="1.3rem" color="#A0A3C1">{date}</Text>
+      <Text fontSize="1.3rem" color="#A0A3C1">{new Date(date).toLocaleDateString()}</Text>
     </Flex>
     <Flex alignItems="center">
       <Icon as={FaMapMarkerAlt} color="#838DE9" mr={2} />
       <Text fontSize="1.3rem" color="#A0A3C1">{location}</Text>
     </Flex>
-  </Box>
+  </LinkBox>
 );
 
-const upcomingWorkshops = [
-  { title: 'Workshop 1', date: 'Jan 10', location: 'New York' },
-  { title: 'Workshop 2', date: 'Jan 20', location: 'San Francisco' },
-  // Add more workshops here...
-];
-
-const pastWorkshops = [
-  { title: 'Workshop A', date: 'Dec 5', location: 'Los Angeles' },
-  { title: 'Workshop B', date: 'Nov 15', location: 'Chicago' },
-  // Add more workshops here...
-];
-
 const WorkshopLandingPage = () => {
-  // Dummy data for workshops
+  const [workshops, setWorkshops] = useState([]);
+  const { publicKey } = useWallet();
+
+  useEffect(() => {
+    const fetchWorkshops = async () => {
+      if (!publicKey) return;
+      try {
+        const response = await fetch(`/api/workshops/${publicKey}`);
+        const data = await response.json();
+        setWorkshops(data.workshops);
+      } catch (error) {
+        console.error('Error fetching workshops:', error);
+      }
+    };
+
+    fetchWorkshops();
+  }, [publicKey]);
 
   return (
     <>
@@ -70,21 +84,18 @@ const WorkshopLandingPage = () => {
           </Button>
         </HStack>
         <VStack align="start" spacing={4}>
-        <Heading as="h2" fontWeight="600" fontSize="2rem" color="#838DE9" mb={4}>
-            Upcoming Workshops
-          </Heading>
-          <Grid templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={6}>
-            {upcomingWorkshops.map(workshop => (
-              <WorkshopItem title={workshop.title} date={workshop.date} location={workshop.location} key={workshop.title} />
-            ))}
-          </Grid>
-          
           <Heading as="h2" fontWeight="600" fontSize="2rem" color="#838DE9" mb={4}>
-            Previous Workshops
+            Workshops
           </Heading>
           <Grid templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={6}>
-            {pastWorkshops.map(workshop => (
-              <WorkshopItem title={workshop.title} date={workshop.date} location={workshop.location} key={workshop.title} />
+            {workshops.map((workshop: any) => (
+              <WorkshopItem
+                title={workshop.name}
+                date={workshop.date}
+                location={workshop.location}
+                id={workshop._id}
+                key={workshop._id}
+              />
             ))}
           </Grid>
         </VStack>

@@ -47,7 +47,7 @@ export default async function handler(
       const nftMetadata: MetadataArgs = {
         name: "NFT NAME",
         symbol: "HEY",
-        uri: "NFT METADATA URL",
+        uri: "",
         creators: [
           {
             address: payer.publicKey,
@@ -68,7 +68,9 @@ export default async function handler(
       console.log("Metadata ready")
 
       console.log("Workshop Id: ", workshopId)
+
       const workshop = await Workshop.findOne({ _id: workshopId })
+      
       console.log("Workshop From Db: ", workshop)
       if (!workshop) {
         return res.status(400).json({ error: "Workshop does not exist" })

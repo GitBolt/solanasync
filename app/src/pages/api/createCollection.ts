@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           name: name,
           symbol: symbol,
-          uri: "",
+          uri: "nft_image",
           sellerFeeBasisPoints: 100,
           creators: [
             {

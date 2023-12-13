@@ -70,7 +70,7 @@ const GaslessSolanaPayNFT = () => {
                 <Icon as={CheckCircleIcon} w={10} h={10} color="green.500" />
                 <Text fontSize="2xl" color="white">NFT Details</Text>
 
-                <Box bg="blue.800" color="white" border="1px" borderColor="gray.200" p={4} borderRadius="md">
+                <Box color="white" border="1px" borderColor="gray.700" p={4} borderRadius="md">
                   <VStack spacing={4} align="left">
 
                     <Text fontWeight="bold">Merkle Tree Address:</Text>

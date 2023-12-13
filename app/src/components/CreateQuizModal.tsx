@@ -22,6 +22,10 @@ import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons';
 import { FaCheck, FaLink, FaQuestionCircle, FaSave } from 'react-icons/fa';
 import { uploadJson } from '@/util/storage';
 import { useCustomToast } from '@/hooks/toast';
+import { createQuizAccount } from '@/util/program/createQuizAccount';
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
+import { useRouter } from 'next/router';
 
 type Question = {
   question: string;
@@ -29,13 +33,22 @@ type Question = {
   correctOptionIndex: number | null;
 };
 
-const CreateQuizModal: React.FC = () => {
+
+type Props = {
+  setUpdateState: any
+}
+const CreateQuizModal = ({ setUpdateState }: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const toast = useCustomToast()
+
+  const wallet = useAnchorWallet()
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [questions, setQuestions] = useState<Question[]>([
     { question: '', options: ['', '', '', ''], correctOptionIndex: null },
   ]);
+
+  const router = useRouter()
 
   const addQuestion = () => {
     setQuestions([...questions, { question: '', options: ['', '', '', ''], correctOptionIndex: null }]);
@@ -74,8 +87,33 @@ const CreateQuizModal: React.FC = () => {
     }
     setLoading(true)
     const res = await uploadJson(JSON.stringify(questions))
-    if (true) {
+    if (res) {
       toast({ type: "success", message: "Link Uploaded", linkTitle: "See On-Chain Quiz Details", link: res })
+      const id = Math.round(Number(Math.random() * 1000))
+      const quizRes = await createQuizAccount(
+        wallet as NodeWallet,
+        res,
+        id,
+        router.query.id as string
+      )
+      if (!quizRes.error) {
+        const res = await fetch("/api/createQuiz", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            workshopId: router.query.id,
+            quizAddress: quizRes.quizAccount
+          })
+        })
+        if (res.ok) {
+          toast({ type: "success", message: "Quiz Created On-chain", linkTitle: "Transaction", link: "https://solscan.io/tx/" + quizRes.sig })
+        }
+        setUpdateState(+new Date())
+        onClose()
+      }
+      console.log(quizRes)
       setLoading(false)
     }
   }

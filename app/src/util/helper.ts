@@ -18,7 +18,7 @@ export const getProvider = (wallet: anchor.Wallet, rpc_url?: string) => {
     preflightCommitment: 'processed' as anchor.web3.ConfirmOptions,
   };
   const connectionURI =
-    rpc_url || LOCALNET_RPC
+    rpc_url || "https://api.devnet.solana.com"
 
   console.log("URI: ", connectionURI)
   const connection = new anchor.web3.Connection(
@@ -38,7 +38,7 @@ export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
   const idl = IDLData as anchor.Idl;
   const program = new anchor.Program(
     idl,
-    new PublicKey(LOCALNET_PROGRAM_ID),
+    new PublicKey(DEVNET_PROGRAM_ID),
     provider
   ) as unknown as anchor.Program<IDLType>;
 
@@ -47,7 +47,6 @@ export const anchorProgram = (wallet: anchor.Wallet, network?: string) => {
 
 export const findLeastDepthPair = (n: number): ValidDepthSizePair => {
   for (const pair of ALL_DEPTH_SIZE_PAIRS) {
-    console.log(Math.pow(2, pair.maxDepth))
     if (Math.pow(2, pair.maxDepth) >= n) {
       return pair;
     }

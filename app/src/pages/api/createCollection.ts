@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
       const { maxDepth, maxBufferSize } = findLeastDepthPair(size)
-      
+      console.log(maxDepth, maxBufferSize, size)
       const maxDepthSizePair = {
         maxDepth,
         maxBufferSize,

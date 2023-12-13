@@ -78,18 +78,18 @@ const ConnectWalletButton = () => {
         <MenuList
           w="10rem"
           p="0.5rem"
-          bg="blue.600"
+          bg="#13131A"
           borderRadius="1rem"
         >
           <MenuItem
             h="3rem"
-            bg="blue.600"
+            bg="#13131A"
             onClick={copyPublicKey}>
             <Text fontSize="1.2rem" color="blue.100" fontWeight={500}>Copy Address</Text>
           </MenuItem>
           <MenuItem
             h="3rem"
-            bg="blue.600"
+            bg="#13131A"
             onClick={async () => {
               if (wallet == null) {
                 return;
@@ -109,7 +109,7 @@ const ConnectWalletButton = () => {
         <MenuList
           w="10rem"
           p="0.5rem"
-          bg="blue.600"
+          bg="#13131A"
           borderRadius="1rem"
         >
           {wallets.map((wallet: SolanaWallet) => {
@@ -117,7 +117,7 @@ const ConnectWalletButton = () => {
               <MenuItem
                 key={wallet.adapter.name}
                 h="3rem"
-                bg="blue.600"
+                bg="#13131A"
                 onClick={async () => {
                   try {
                     onConnectWallet(wallet)

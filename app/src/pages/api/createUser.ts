@@ -6,13 +6,13 @@ import { User } from '@/util/schema';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
+  dbConnect()
   if (req.method === 'POST') {
     try {
       const { publicKey } = req.body;
       if (!publicKey) {
         return res.status(400).json({ message: 'Public Key is required' });
       }
-      await dbConnect();
       const newUser = new User({ publicKey });
       await newUser.save();
 

@@ -43,6 +43,7 @@ const WorkshopLandingPage = () => {
   const [workshops, setWorkshops] = useState([]);
   const { publicKey } = useWallet();
   const router = useRouter()
+  
   useEffect(() => {
     
     const fetchWorkshops = async () => {

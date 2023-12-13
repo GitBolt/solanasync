@@ -59,6 +59,15 @@ const CreateNFTCollectionModal: React.FC = () => {
 
     try {
       const imageUrl = await uploadFile(imageFile);
+
+      toast({
+        title: 'Success',
+        description: 'Metadata Uploaded. Processing...',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+
       const payload = {
         name: collectionName,
         symbol: symbol,
@@ -142,7 +151,6 @@ const CreateNFTCollectionModal: React.FC = () => {
                   />
                 </Box>
               </Box>
-
 
               <Input
                 bg="#13131A"

@@ -19,6 +19,7 @@ export default async function handler(
     return;
   }
 
+  await dbConnect()
   if (!publicKey || typeof publicKey !== 'string') {
     return res.status(400).json({ message: 'Public key is required as a route parameter' });
   }

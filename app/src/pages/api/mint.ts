@@ -7,6 +7,7 @@ import {
 import * as anchor from '@project-serum/anchor';
 import { mintCompressedNft } from '@/util/cnft/mint';
 import { Workshop } from '@/util/schema';
+import dbConnect from '@/util/db';
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +31,8 @@ export default async function handler(
         res.status(400).json({ error: 'No account provided' });
         return;
       }
+
+      await dbConnect()
 
       console.log("Getting Connection")
       const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://api.devnet.solana.com", "processed");

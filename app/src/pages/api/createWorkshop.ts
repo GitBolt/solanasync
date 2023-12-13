@@ -1,3 +1,4 @@
+import dbConnect from '@/util/db';
 import { Workshop } from '@/util/schema';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -8,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!name || !location || !date) {
         return res.status(400).json({ message: 'Name, location, date and ownerPubKey are required' });
       }
+      await dbConnect()
       const newWorkshop = new Workshop({ name, location, date, owner: ownerPubKey });
       await newWorkshop.save();
 

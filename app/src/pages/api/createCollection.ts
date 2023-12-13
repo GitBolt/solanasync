@@ -6,6 +6,7 @@ import { CreateMetadataAccountArgsV3 } from '@metaplex-foundation/mpl-token-meta
 import { web3 } from '@coral-xyz/anchor';
 import { Workshop } from '@/util/schema';
 import { findLeastDepthPair } from '@/util/helper';
+import dbConnect from '@/util/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -58,6 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const collection = await createCollection(connection, payer, collectionMetadataV3);
 
       console.log(collection)
+      await dbConnect();
       await Workshop.updateOne(
         { _id: workshopId },
         {

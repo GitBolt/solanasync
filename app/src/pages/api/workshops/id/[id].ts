@@ -20,6 +20,7 @@ export default async function handler(
     return;
   }
 
+  await dbConnect()
   if (!id) {
     return res.status(400).json({ message: 'Id is required as a route parameter' });
   }

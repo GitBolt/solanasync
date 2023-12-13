@@ -50,7 +50,7 @@ const ConnectWalletButton = () => {
     <Menu>
       <MenuButton
         as={Button}
-        _hover={{background:"#9A91FF"}}
+        _hover={{ background: "#9A91FF" }}
         background="#5F54D8"
         color="white"
         w="13rem"

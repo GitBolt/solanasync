@@ -23,7 +23,7 @@ const WorkshopPage = () => {
 	useEffect(() => {
 
 		const fetchWorkshops = async () => {
-			if (!publicKey) return;
+			if (!publicKey || !router.query.id) return;
 			try {
 				const response = await fetch(`/api/workshops/id/${router.query.id}`);
 				const data = await response.json();
@@ -34,7 +34,7 @@ const WorkshopPage = () => {
 		};
 
 		fetchWorkshops();
-	}, [publicKey, updateState]);
+	}, [publicKey, updateState, router.query]);
 
 
 	return (
@@ -77,11 +77,12 @@ const WorkshopPage = () => {
 								justifyContent="center"
 								minW="25rem"
 								alignItems="center"
-								height="10rem"
+								height="13rem"
+								padding="0 2rem"
 								alignContent="center"
 							>
 								<LinkOverlay href={`/workshop/${router.query.id}/nft`}>
-									<Text fontSize="1.5rem" color="white" w="100%" textAlign="center">View Solana Pay Gasless NFT</Text>
+									<Text fontSize="1.8rem" color="white" w="100%" textAlign="center">View Solana Pay Gasless NFT</Text>
 								</LinkOverlay>
 							</LinkBox> : <CreateNFTCollectionModal />}
 					</Flex>

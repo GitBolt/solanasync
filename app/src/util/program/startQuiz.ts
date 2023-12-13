@@ -2,11 +2,9 @@ import * as anchor from '@coral-xyz/anchor';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { anchorProgram } from '@/util/helper';
 
-export const createQuizAccount = async (
+export const startQuiz = async (
   wallet: anchor.Wallet,
-  data: string,
-  quizId: number,
-  workshopId: string,
+  quizId: number
 ) => {
   const program = anchorProgram(wallet);
 
@@ -17,7 +15,7 @@ export const createQuizAccount = async (
 
   try {
     const txHash = await program.methods
-      .createQuiz(quizId, data, workshopId, Math.floor(1000 + Math.random() * 9000))
+      .startQuiz(quizId)
       .accounts({
         quizAccount,
         authority: wallet.publicKey,
@@ -25,7 +23,7 @@ export const createQuizAccount = async (
       })
       .rpc();
 
-    return { error: false, sig: txHash, quizAccount };
+    return { error: false, sig: txHash };
   } catch (e: any) {
     console.log(e);
     return { error: e.toString(), sig: null };

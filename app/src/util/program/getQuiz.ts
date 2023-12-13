@@ -13,9 +13,9 @@ export const getQuiz = async (
     console.log(data)
     if (data) {
 
-      const json = await fetch(data.data)
-      console.log(json)
-      return { error: false, sig: "a" }
+      const data2 = await fetch(data.data)
+      const json = await data2.json()
+      return { error: false, questionCount: json.length, date: data.dateCreated.toNumber(), id: data.id.toNumber()}
     }
     return { error: "Account not found", sig: '' }
 

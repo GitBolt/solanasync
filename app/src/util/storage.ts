@@ -11,7 +11,7 @@ export const uploadJson = async (object: string) => {
 
     const manifestBuffer = Buffer.from(JSON.stringify(manifestObject));
     const cid = await client.storeBlob(new Blob([manifestBuffer]));
-    const link = `https://${cid}.ipfs.dweb.link`;
+    const link = `https://${cid}.ipfs.nftstorage.link`;
     console.log(`🎉 Uploaded JSON: ${link}`);
     return link;
   } catch (e) {

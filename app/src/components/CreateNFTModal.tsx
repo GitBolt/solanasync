@@ -118,7 +118,7 @@ const CreateNFTCollectionModal: React.FC = () => {
 
   return (
     <>
-      <Button onClick={onOpen} rounded="2rem" bg="#5F54D8" w="22rem" h="6rem" fontSize="2rem" leftIcon={<Icon as={FaQrcode} />} colorScheme="voilet">
+      <Button padding="2rem 0" onClick={onOpen} rounded="2rem" bg="#5F54D8" w="22rem" h="6rem" fontSize="2rem" leftIcon={<Icon as={FaQrcode} />} colorScheme="voilet">
         Create Collection
       </Button>
 

@@ -30,6 +30,7 @@ export const QuizManageBox = ({ publicKey }: Props) => {
     const fetchData = async () => {
 
       const res = await getQuiz(wallet as NodeWallet, publicKey)
+      console.log(res)
       setQuestionCount(res.questionCount);
       setDate(new Date(res.date));
       setId(res.id)

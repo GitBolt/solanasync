@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -8,20 +8,26 @@ import {
   Input,
   VStack,
   Heading,
-  useToast
+  useToast,
+  Text
 } from '@chakra-ui/react';
 import { useCustomToast } from '@/hooks/toast';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { Navbar } from '@/components/Navbar';
+import { getQuizByCode } from '@/util/program/getQuizByCode';
+import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
 
 const JoinQuizPage = () => {
   const [name, setName] = useState('');
   const [quizRoom, setQuizRoom] = useState('');
   const toast = useCustomToast()
-
+  const wallet = useAnchorWallet()
   const { publicKey } = useWallet()
+  const [startFetch, setStartFetch] = useState<boolean>(false)
 
-  const handleJoinClick = () => {
+  const [quizDetails, setQuizDetails] = useState<any>({})
+
+  const handleJoinClick = async () => {
 
     if (!publicKey) {
       return toast({
@@ -36,9 +42,40 @@ const JoinQuizPage = () => {
       });
       return;
     }
-    // Add your joining logic here
-    console.log("Joining quiz room:", quizRoom, "with name:", name);
+    const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
+    if (!res.error) {
+      setStartFetch(true)
+    } else {
+      return toast({
+        type:"error",
+        message:"No quiz with the ID found"
+      })
+    }
+
   };
+
+
+
+  useEffect(() => {
+    let intervalId: any;
+    if (startFetch) {
+      const fetchFunc = async () => {
+        const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
+        if (res.account.isStarted) {
+          setStartFetch(false)
+        }
+      };
+
+      intervalId = setInterval(fetchFunc, 1000); // Fetch every 1 second
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [startFetch]);
+
 
   return (
     <>
@@ -80,7 +117,7 @@ const JoinQuizPage = () => {
             <FormControl id="quiz-room" isRequired>
               <FormLabel color="#C0C6F4" fontSize="lg">Quiz Room Name</FormLabel>
               <Input
-              fontSize="1.2rem"
+                fontSize="1.2rem"
                 borderColor="#1D1E27"
                 color="white"
                 value={quizRoom}
@@ -89,7 +126,7 @@ const JoinQuizPage = () => {
               />
             </FormControl>
 
-            <Button
+            {quizDetails && quizDetails.account && quizDetails.account.isStarted == false ? <Text>Quiz is yet to start...</Text> : <Button
               colorScheme="blue"
               onClick={handleJoinClick}
               color="white"
@@ -100,7 +137,7 @@ const JoinQuizPage = () => {
               fontSize="lg"
             >
               Join
-            </Button>
+            </Button>}
           </VStack>
         </Box>
       </Flex>

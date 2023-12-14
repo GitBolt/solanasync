@@ -35,7 +35,7 @@ export default async function handler(
       await dbConnect()
 
       console.log("Getting Connection")
-      const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://api.devnet.solana.com", "processed");
+      const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://solana-devnet.g.alchemy.com/v2/uUAHkqkfrVERwRHXnj8PEixT8792zETN", "processed");
 
       const user = new anchor.web3.PublicKey(account);
 
@@ -47,10 +47,17 @@ export default async function handler(
       const reference = anchor.web3.Keypair.generate();
       console.log("Ref: ", reference.publicKey.toBase58())
 
+      console.log("Workshop Id: ", workshopId)
+      const workshop = await Workshop.findOne({ _id: workshopId })
+      console.log("Workshop From Db: ", workshop)
+      if (!workshop) {
+        return res.status(400).json({ error: "Workshop does not exist" })
+      }
+      
       const nftMetadata: MetadataArgs = {
         name: "NFT NAME",
         symbol: "HEY",
-        uri: "",
+        uri: workshop.cNFTMetadata.uri,
         creators: [
           {
             address: payer.publicKey,
@@ -70,14 +77,6 @@ export default async function handler(
 
       console.log("Metadata ready")
 
-      console.log("Workshop Id: ", workshopId)
-
-      const workshop = await Workshop.findOne({ _id: workshopId })
-      
-      console.log("Workshop From Db: ", workshop)
-      if (!workshop) {
-        return res.status(400).json({ error: "Workshop does not exist" })
-      }
 
       console.log("Found Workshop. Minting Compressed NFT Ix")
 

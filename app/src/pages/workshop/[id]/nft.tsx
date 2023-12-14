@@ -5,6 +5,7 @@ import { Box, Flex, Text, Button, VStack, Icon, Link, useToast, Tbody, Table, Tr
 import { InfoIcon, CloseIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { Navbar } from '@/components/Navbar';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const GaslessSolanaPayNFT = () => {
   const [qrCodeValue, setQrCodeValue] = useState('');
@@ -52,6 +53,19 @@ const GaslessSolanaPayNFT = () => {
   return (
     <>
       <Navbar />
+
+      <Button
+				leftIcon={<FaArrowLeft />}
+				color="#5F54D8"
+				borderColor="#5F54D8"
+				_hover={{bg:"transparent"}}
+				variant="outline"
+				onClick={() => router.push("/workshop/" + router.query.id)}
+				m={4}
+			>
+				Back to Workshop
+			</Button>
+
       <VStack spacing={8} align="stretch" p={12} bg="#0E0E10">
         <Text as="h1" fontWeight="bold" fontSize="4xl" color="white" align="center">
           Gasless Solana Pay NFT

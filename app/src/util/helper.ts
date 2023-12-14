@@ -18,7 +18,7 @@ export const getProvider = (wallet: anchor.Wallet, rpc_url?: string) => {
     preflightCommitment: 'processed' as anchor.web3.ConfirmOptions,
   };
   const connectionURI =
-    rpc_url || "https://api.devnet.solana.com"
+    rpc_url || "https://solana-devnet.g.alchemy.com/v2/uUAHkqkfrVERwRHXnj8PEixT8792zETN"
 
   console.log("URI: ", connectionURI)
   const connection = new anchor.web3.Connection(

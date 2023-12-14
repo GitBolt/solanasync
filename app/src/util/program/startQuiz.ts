@@ -4,18 +4,18 @@ import { anchorProgram } from '@/util/helper';
 
 export const startQuiz = async (
   wallet: anchor.Wallet,
-  quizId: number
+  quizCode: number
 ) => {
   const program = anchorProgram(wallet);
 
   const [quizAccount] = PublicKey.findProgramAddressSync(
-    [Buffer.from("quiz"), new anchor.BN(quizId).toArrayLike(Buffer, "le", 4)],
+    [Buffer.from("quiz"), new anchor.BN(quizCode).toArrayLike(Buffer, "le", 4)],
     program.programId
   );
 
   try {
     const txHash = await program.methods
-      .startQuiz(quizId)
+      .startQuiz(quizCode)
       .accounts({
         quizAccount,
         authority: wallet.publicKey,

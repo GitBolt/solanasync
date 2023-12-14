@@ -16,17 +16,18 @@ import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { Navbar } from '@/components/Navbar';
 import { getQuizByCode } from '@/util/program/getQuizByCode';
 import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
+import { createQuizAccount } from '@/util/program/createQuizAccount';
+import { createQuizUserAccount } from '@/util/program/createQuizUser';
+import QuizGame from '@/components/QuizGame';
 
 const JoinQuizPage = () => {
   const [name, setName] = useState('');
   const [quizRoom, setQuizRoom] = useState('');
   const toast = useCustomToast()
-  const wallet = useAnchorWallet()
   const { publicKey } = useWallet()
-  const [startFetch, setStartFetch] = useState<boolean>(false)
-
-  const [quizDetails, setQuizDetails] = useState<any>({})
-
+  const [start, setStart] = useState<boolean>(false)
+  const [quizDetails, setQuizDetails] = useState<any>()
+  const wallet = useAnchorWallet()
   const handleJoinClick = async () => {
 
     if (!publicKey) {
@@ -44,11 +45,17 @@ const JoinQuizPage = () => {
     }
     const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
     if (!res.error) {
-      setStartFetch(true)
+      const quizUserRes = await createQuizUserAccount(wallet as NodeWallet, Number(quizRoom))
+      if (!quizUserRes.error) {
+        return toast({
+          type: "success",
+          message: "Created Quiz Account. Waiting for Quiz to start..."
+        })
+      }
     } else {
       return toast({
-        type:"error",
-        message:"No quiz with the ID found"
+        type: "error",
+        message: "No quiz with the ID found"
       })
     }
 
@@ -57,30 +64,31 @@ const JoinQuizPage = () => {
 
 
   useEffect(() => {
-    let intervalId: any;
-    if (startFetch) {
-      const fetchFunc = async () => {
-        const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
-        if (res.account.isStarted) {
-          setStartFetch(false)
-        }
-      };
+    const fetchFunc = async () => {
+      if (!quizRoom) return
+      const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
+      setQuizDetails(res)
 
-      intervalId = setInterval(fetchFunc, 1000); // Fetch every 1 second
-    }
+      if (res.account.isStarted) {
+        setStart(true)
+      }
+    };
 
+    let intervalId = setInterval(fetchFunc, 5000);
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
       }
     };
-  }, [startFetch]);
+  }, [quizRoom, wallet]);
 
 
   return (
     <>
       <Navbar />
-      <Flex
+      {start ? <>
+      <QuizGame details={quizDetails.details}/>
+      </> : <Flex
         direction="column"
         align="center"
         justify="center"
@@ -115,7 +123,7 @@ const JoinQuizPage = () => {
             </FormControl>
 
             <FormControl id="quiz-room" isRequired>
-              <FormLabel color="#C0C6F4" fontSize="lg">Quiz Room Name</FormLabel>
+              <FormLabel color="#C0C6F4" fontSize="lg">Quiz ID</FormLabel>
               <Input
                 fontSize="1.2rem"
                 borderColor="#1D1E27"
@@ -126,7 +134,7 @@ const JoinQuizPage = () => {
               />
             </FormControl>
 
-            {quizDetails && quizDetails.account && quizDetails.account.isStarted == false ? <Text>Quiz is yet to start...</Text> : <Button
+            {quizDetails ? <Text color="white" fontSize="2rem">Quiz is yet to start...</Text> : <Button
               colorScheme="blue"
               onClick={handleJoinClick}
               color="white"
@@ -140,7 +148,7 @@ const JoinQuizPage = () => {
             </Button>}
           </VStack>
         </Box>
-      </Flex>
+      </Flex>}
     </>
   );
 };

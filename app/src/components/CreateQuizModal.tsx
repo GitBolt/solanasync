@@ -89,11 +89,9 @@ const CreateQuizModal = ({ setUpdateState }: Props) => {
     const res = await uploadJson(JSON.stringify(questions))
     if (res) {
       toast({ type: "success", message: "Link Uploaded", linkTitle: "See On-Chain Quiz Details", link: res })
-      const id = Math.round(Number(Math.random() * 1000))
       const quizRes = await createQuizAccount(
         wallet as NodeWallet,
         res,
-        id,
         router.query.id as string
       )
       if (!quizRes.error) {

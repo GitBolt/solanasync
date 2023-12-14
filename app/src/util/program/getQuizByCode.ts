@@ -1,4 +1,4 @@
-import * as anchor from '@coral-xyz/anchor'
+import * as anchor from '@coral-xyz/anchor';
 import { anchorProgram } from '@/util/helper';
 
 export const getQuizByCode = async (
@@ -7,27 +7,38 @@ export const getQuizByCode = async (
 ) => {
   const program = anchorProgram(wallet);
 
-  try {
-    // @ts-ignore
-    const data = await program.account.quizAccount.all([
-      {
-        memcmp: {
-          offset: 8,
-          bytes: anchor.utils.bytes.bs58.encode(Uint8Array.from([quizId])),
+  const attemptFetch = async (offset: number) => {
+    try {
+      // @ts-ignore
+      const data = await program.account.quizAccount.all([
+        {
+          memcmp: {
+            offset: offset,
+            bytes: anchor.utils.bytes.bs58.encode([quizId]),
+          },
         },
-      },
-    ])
+      ]);
 
-    console.log(data)
-    if (data || data.length) {
-      console.log("Found")
-      const data2 = await fetch(data[0].account.data)
-      const json = await data2.json()
-      return { error: false, details: json, account: data.account }
+      if (data && data.length) {
+        console.log("Found");
+        const data2 = await fetch(data[0].account.data);
+        const json = await data2.json();
+        return { error: false, details: json, account: data[0].account };
+      }
+      return { error: "Account not found", sig: '' };
+    } catch (e) {
+      console.log("Error with offset", offset, e);
+      throw e;
     }
-    return { error: "Account not found", sig: '' }
-  } catch (e: any) {
-    console.log(e)
-    return { error: e.toString(), sig: null }
+  };
+
+  try {
+    return await attemptFetch(8);
+  } catch (e) {
+    try {
+      return await attemptFetch(12);
+    } catch (e) {
+      return await attemptFetch(8);
+    }
   }
-}
+};

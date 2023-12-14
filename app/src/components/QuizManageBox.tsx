@@ -19,21 +19,17 @@ export const QuizManageBox = ({ publicKey }: Props) => {
   const router = useRouter()
 
   const manageStart = async () => {
-    if (!id) return
-    const res = await startQuiz(wallet as NodeWallet, id)
-    if (!res.error) {
-      router.push("/quiz/manage/" + id)
-    }
+    router.push("/quiz/" + id)
+
   }
 
   useEffect(() => {
     const fetchData = async () => {
-
       const res = await getQuiz(wallet as NodeWallet, publicKey)
-      console.log(res)
       setQuestionCount(res.questionCount);
+      console.log("DATE: ", res.date)
       setDate(new Date(res.date));
-      setId(res.id)
+      setId(res.code)
     }
 
     fetchData()
@@ -61,10 +57,10 @@ export const QuizManageBox = ({ publicKey }: Props) => {
       </Text>
 
       <Flex w="100%" justify="space-between">
-        <Text fontSize="1.3rem" color="#485762" alignSelf="flex-start">
+        {/* <Text fontSize="1.3rem" color="#485762" alignSelf="flex-start">
           {date ? date.toDateString() : ''}
-        </Text>
-        <Button onClick={manageStart} height="3rem" fontSize="1.2rem" color="#9A91FF" variant="outline" borderColor="#9A91FF" _hover={{ bg: "#9A91FF", color: "white" }} alignSelf="flex-end">
+        </Text> */}
+        <Button isDisabled={!id} onClick={manageStart} height="3rem" fontSize="1.2rem" color="#9A91FF" variant="outline" borderColor="#9A91FF" _hover={{ bg: "#9A91FF", color: "white" }} alignSelf="flex-end">
           Start Quiz
         </Button>
       </Flex>

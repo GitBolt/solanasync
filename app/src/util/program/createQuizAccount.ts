@@ -5,19 +5,20 @@ import { anchorProgram } from '@/util/helper';
 export const createQuizAccount = async (
   wallet: anchor.Wallet,
   data: string,
-  quizId: number,
   workshopId: string,
 ) => {
+
+  const code = Math.floor(1000 + Math.random() * 9000)
   const program = anchorProgram(wallet);
 
   const [quizAccount] = PublicKey.findProgramAddressSync(
-    [Buffer.from("quiz"), new anchor.BN(quizId).toArrayLike(Buffer, "le", 4)],
+    [Buffer.from("quiz"), new anchor.BN(code).toArrayLike(Buffer, "le", 4)],
     program.programId
   );
 
   try {
     const txHash = await program.methods
-      .createQuiz(quizId, data, workshopId, Math.floor(1000 + Math.random() * 9000))
+      .createQuiz(code, data, workshopId)
       .accounts({
         quizAccount,
         authority: wallet.publicKey,

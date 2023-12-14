@@ -17,9 +17,9 @@ const WorkshopItem = ({ title, date, location, id }: Props) => (
     w="100%"
     p={4}
     mb={4}
-    minW="25rem"
     cursor="pointer"
     minH="10rem"
+    minW="25rem"
     bg="#13131A"
     boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)"
     borderRadius="1rem"
@@ -28,11 +28,11 @@ const WorkshopItem = ({ title, date, location, id }: Props) => (
     <LinkOverlay href={"/workshop/" + id}>
       <Text fontSize="1.5rem" color="white" mb={2}>{title}</Text>
     </LinkOverlay>
-    <Flex alignItems="center" mb={1}>
+    <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center" mb={1}>
       <Icon as={FaCalendarAlt} color="#838DE9" mr={2} />
       <Text fontSize="1.3rem" color="#A0A3C1">{new Date(date).toLocaleDateString()}</Text>
     </Flex>
-    <Flex alignItems="center">
+    <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center">
       <Icon as={FaMapMarkerAlt} color="#838DE9" mr={2} />
       <Text fontSize="1.3rem" color="#A0A3C1">{location}</Text>
     </Flex>
@@ -42,10 +42,9 @@ const WorkshopItem = ({ title, date, location, id }: Props) => (
 const WorkshopLandingPage = () => {
   const [workshops, setWorkshops] = useState([]);
   const { publicKey } = useWallet();
-  const router = useRouter()
+  const router = useRouter();
   
   useEffect(() => {
-    
     const fetchWorkshops = async () => {
       if (!publicKey) return;
       try {
@@ -71,7 +70,7 @@ const WorkshopLandingPage = () => {
         p={12}
         bg="#0E0E10"
       >
-        <HStack justify="space-between" w="100%" mb={6}>
+        <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" w="100%" mb={6}>
           <Heading as="h1" fontWeight="100" fontSize="3rem" color="white">
             Your Workshops
           </Heading>
@@ -87,12 +86,12 @@ const WorkshopLandingPage = () => {
           >
             New Workshop
           </Button>
-        </HStack>
+        </Flex>
         <VStack align="start" spacing={4}>
           <Heading as="h2" fontWeight="600" fontSize="2rem" color="#838DE9" mb={4}>
             Workshops
           </Heading>
-          <Grid templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={6}>
+          <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" }} gap={6}>
             {workshops.map((workshop: any) => (
               <WorkshopItem
                 title={workshop.name}
@@ -110,3 +109,4 @@ const WorkshopLandingPage = () => {
 };
 
 export default WorkshopLandingPage;
+``

@@ -13,6 +13,7 @@ import { FiMonitor, FiBookOpen, FiActivity, FiCamera, FiPaperclip, FiList } from
 import { Navbar } from '@/components/Navbar';
 import { useRouter } from 'next/router';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { DefaultHead } from '@/components/DefaultHead';
 
 const WorkshopLandingPage = () => {
   const [workshopsExist, setWorkshopsExist] = useState<boolean>(false)
@@ -36,6 +37,7 @@ const WorkshopLandingPage = () => {
   }, [publicKey])
   return (
     <>
+      <DefaultHead />
       <Navbar />
       <Flex
 

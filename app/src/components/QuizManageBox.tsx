@@ -40,7 +40,7 @@ export const QuizManageBox = ({ publicKey }: Props) => {
       w="100%"
       p={4}
       mb={4}
-      minW="25rem"
+      minW="20rem"
       bg="#13131A"
       height="13rem"
       display="flex"

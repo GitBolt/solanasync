@@ -32,7 +32,7 @@ const Leaderboard = ({ quizCode }: Props) => {
                 publicKey: user.publicKey.toBase58().slice(0, 10), // Trimmed publicKey
                 points: user.account.points.reduce((acc: number, val: number) => acc + val, 0), // Sum of points
                 username: user.account.name
-            })).sort((a, b) => b.points - a.points); // Sort users in descending order by points
+            })).sort((a: any, b: any) => b.points - a.points); // Sort users in descending order by points
             setUsers(processedUsers);
             setIsLoading(false);
         };

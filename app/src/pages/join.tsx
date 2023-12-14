@@ -8,7 +8,6 @@ import {
   Input,
   VStack,
   Heading,
-  useToast,
   Text
 } from '@chakra-ui/react';
 import { useCustomToast } from '@/hooks/toast';
@@ -16,18 +15,21 @@ import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { Navbar } from '@/components/Navbar';
 import { getQuizByCode } from '@/util/program/getQuizByCode';
 import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
-import { createQuizAccount } from '@/util/program/createQuizAccount';
 import { createQuizUserAccount } from '@/util/program/createQuizUser';
 import QuizGame from '@/components/QuizGame';
+import { getQuizUser } from '@/util/program/getQuizUser';
 
 const JoinQuizPage = () => {
   const [name, setName] = useState('');
   const [quizRoom, setQuizRoom] = useState('');
+  const [quizUser, setQuizUser] = useState<any>();
   const toast = useCustomToast()
   const { publicKey } = useWallet()
   const [start, setStart] = useState<boolean>(false)
   const [quizDetails, setQuizDetails] = useState<any>()
   const wallet = useAnchorWallet()
+  const [done, setDone] = useState<boolean>(false)
+
   const handleJoinClick = async () => {
 
     if (!publicKey) {
@@ -45,8 +47,24 @@ const JoinQuizPage = () => {
     }
     const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
     if (!res.error) {
-      const quizUserRes = await createQuizUserAccount(wallet as NodeWallet, Number(quizRoom))
+      console.log("RES OF QUIZ GET: ", res)
+      if (res.account.isDone) {
+        return toast ({
+          type:"error",
+          message:"Quiz is over"
+        })
+      }
+      const quizUserResBe = await getQuizUser(wallet as NodeWallet, Number(quizRoom), publicKey.toBase58())
+      if (quizUserResBe.details) {
+        setQuizUser({user: ''})
+        return toast({
+          type: "success",
+          message: "Quiz User Exists. Waiting for Quiz to start..."
+        })
+      }
+      const quizUserRes = await createQuizUserAccount(wallet as NodeWallet, Number(quizRoom), name)
       if (!quizUserRes.error) {
+        setQuizUser({user: ''})
         return toast({
           type: "success",
           message: "Created Quiz Account. Waiting for Quiz to start..."
@@ -65,50 +83,72 @@ const JoinQuizPage = () => {
 
   useEffect(() => {
     const fetchFunc = async () => {
-      if (!quizRoom) return
+      console.log(quizRoom, quizUser, wallet)
+      if (!quizRoom || !quizUser) return
+      if (!wallet) {
+        return toast({
+          type: "error",
+          message: "Connect wallet please"
+        })
+      }
+
+      const quizUserRes = await getQuizUser(wallet as NodeWallet, Number(quizRoom), wallet.publicKey.toBase58())
+      console.log("QUIZ USER RES: ", quizUserRes)
+      if (!quizUserRes.error) {
+        setQuizUser(quizUserRes.details)
+      } else {
+        return
+      }
       const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
+      console.log("RES: ", res)
       setQuizDetails(res)
 
       if (res.account.isStarted) {
         setStart(true)
       }
+
+      if (res.account.isDone) {
+        setDone(true)
+      }
     };
 
-    let intervalId = setInterval(fetchFunc, 5000);
+    let intervalId = setInterval(fetchFunc, 3000);
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
       }
     };
-  }, [quizRoom, wallet]);
+  }, [quizRoom, wallet, quizUser]);
 
 
   return (
     <>
       <Navbar />
-      {start ? <>
-      <QuizGame details={quizDetails.details}/>
-      </> : <Flex
-        direction="column"
-        align="center"
-        justify="center"
-        minHeight="80vh"
-        bg="#0E0E10"
-        borderColor="gray.700"
-      >
-        <Box
-          p={10}
-          width="40rem"
-          borderWidth={1}
-          borderRadius={12}
-          boxShadow="lg"
-          bg="#13131A"
+      {start ? (
+        <QuizGame details={quizDetails.details} done={done} quizCode={Number(quizRoom)} />
+      ) : (
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          minHeight="80vh"
+          bg="#0E0E10"
           borderColor="gray.700"
         >
-          <VStack spacing={6}>
-            <Heading as="h2" size="2xl" color="#C0C6F4" textAlign="center">
-              Join Quiz
-            </Heading>
+          <Box
+            p={10}
+            width="40rem"
+            borderWidth={1}
+            borderRadius={12}
+            boxShadow="lg"
+            bg="#13131A"
+            borderColor="gray.700"
+          >
+            <VStack spacing={6}>
+              <Heading as="h2" size="2xl" color="#C0C6F4" textAlign="center">
+                Join Quiz
+              </Heading>
+
 
             <FormControl id="name" isRequired>
               <FormLabel color="#C0C6F4" fontSize="lg">Name</FormLabel>
@@ -134,21 +174,28 @@ const JoinQuizPage = () => {
               />
             </FormControl>
 
-            {quizDetails ? <Text color="white" fontSize="2rem">Quiz is yet to start...</Text> : <Button
-              colorScheme="blue"
-              onClick={handleJoinClick}
-              color="white"
-              bg="#5F54D8"
-              width="50%"
-              _hover={{ background: "#9A91FF" }}
-              size="lg"
-              fontSize="lg"
-            >
-              Join
-            </Button>}
-          </VStack>
-        </Box>
-      </Flex>}
+            {quizUser ? (
+                <Text color="white" fontSize="2rem">
+                  You've joined the quiz, waiting for it to start...
+                </Text>
+              ) : (
+                <Button
+                  colorScheme="blue"
+                  onClick={handleJoinClick}
+                  color="white"
+                  bg="#5F54D8"
+                  width="50%"
+                  _hover={{ background: "#9A91FF" }}
+                  size="lg"
+                  fontSize="lg"
+                >
+                  Join
+                </Button>
+              )}
+            </VStack>
+          </Box>
+        </Flex>
+      )}
     </>
   );
 };

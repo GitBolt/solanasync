@@ -4,7 +4,8 @@ import { anchorProgram } from '@/util/helper';
 
 export const createQuizUserAccount = async (
   wallet: anchor.Wallet,
-  quizCode: number
+  quizCode: number,
+  name: string
 ) => {
   const program = anchorProgram(wallet);
 
@@ -19,7 +20,7 @@ export const createQuizUserAccount = async (
 
   try {
     const txHash = await program.methods
-      .createQuizUser(quizCode)
+      .createQuizUser(quizCode, name)
       .accounts({
         quizUserAccount,
         authority: wallet.publicKey,

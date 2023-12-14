@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, VStack, Text, Input, Button } from '@chakra-ui/react';
+import { Box, VStack, Text, Input, Button, Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useCustomToast } from '@/hooks/toast';
@@ -7,6 +7,8 @@ import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
 import { Navbar } from '@/components/Navbar';
 import { getQuizByCode } from '@/util/program/getQuizByCode';
 import { startQuiz } from '@/util/program/startQuiz';
+import { closeQuiz } from '@/util/program/closeQuiz';
+import Leaderboard from '@/components/Leaderboard';
 
 const QuizJoinPage = () => {
   const [hasPermission, setHasPermission] = useState(false);
@@ -15,6 +17,8 @@ const QuizJoinPage = () => {
   const { publicKey } = useWallet();
   const wallet = useAnchorWallet();
   const toast = useCustomToast();
+  const [started, setStarted] = useState<boolean>(false)
+  const [stopped, setStopped] = useState<boolean>(false)
 
   useEffect(() => {
     if (!router.query.code) return;
@@ -30,6 +34,10 @@ const QuizJoinPage = () => {
       if (res.account.owner.toBase58() === publicKey?.toBase58()) {
         setHasPermission(true);
         setQuizDetails(res);
+        if (res.account.isDone) {
+          setStopped(true)
+          setStarted(true)
+        }
       }
     };
 
@@ -49,6 +57,17 @@ const QuizJoinPage = () => {
     );
   }
 
+  const handleStop = async () => {
+    const res = await closeQuiz(wallet as NodeWallet, Number(router.query.code))
+    if (!res.error) {
+      toast({
+        type: "success",
+        message: "Quiz stopped"
+      })
+      setStopped(true)
+    }
+  }
+
   const handleStart = async () => {
     if (!router.query.code) {
       return toast({
@@ -62,13 +81,20 @@ const QuizJoinPage = () => {
         type: "success",
         message: "Quiz started"
       })
+      setStarted(true)
     }
   };
 
   return (
     <>
       <Navbar />
-      <VStack spacing={8} align="center" justify="center" w="full" pt={12} pb={12}>
+      {started ? <>
+        {!stopped ? <Box>
+          <Text>Quiz Started!</Text>
+          <Button onClick={handleStop}>Stop Quiz</Button>
+        </Box> :
+          <Leaderboard quizCode={Number(router.query.code)}/>}
+      </> : <VStack spacing={8} align="center" justify="center" w="full" pt={12} pb={12}>
         <Box w="40rem" bg="#13131A" borderRadius="lg" p={8} boxShadow="xl">
           <VStack spacing={6}>
             <Text fontSize="2.8rem" color="white" fontWeight="bold">Head over to</Text>
@@ -78,7 +104,7 @@ const QuizJoinPage = () => {
             <Button fontSize="2rem" padding="2rem 2rem" onClick={handleStart} colorScheme="blue" >Start Quiz</Button>
           </VStack>
         </Box>
-      </VStack>
+      </VStack>}
     </>
   );
 };

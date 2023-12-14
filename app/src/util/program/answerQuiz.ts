@@ -4,13 +4,13 @@ import { anchorProgram } from '@/util/helper';
 
 export const answerQuiz = async (
   wallet: anchor.Wallet,
-  quizId: number,
+  quizCode: number,
   answers: number[]
 ) => {
   const program = anchorProgram(wallet);
-
+  console.log("QUIZ ANSWERS: ", answers)
   const [quizAccount] = PublicKey.findProgramAddressSync(
-    [Buffer.from("quiz"), new anchor.BN(quizId).toArrayLike(Buffer, "le", 4)],
+    [Buffer.from("quiz"), new anchor.BN(quizCode).toArrayLike(Buffer, "le", 4)],
     program.programId
   )
 
@@ -18,14 +18,14 @@ export const answerQuiz = async (
     [
       Buffer.from("quiz_user"),
       wallet.publicKey.toBuffer(),
-      new anchor.BN(quizId).toArrayLike(Buffer, "le", 4),
+      new anchor.BN(quizCode).toArrayLike(Buffer, "le", 4),
     ],
     program.programId
   )
 
   try {
     const txHash = await program.methods
-      .answerQuiz(quizId, answers)
+      .answerQuiz(quizCode, answers)
       .accounts({
         quizAccount,
         quizUserAccount,

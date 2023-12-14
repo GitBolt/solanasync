@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Text, VStack, Center, Heading, Badge, extendTheme, ChakraProvider } from '@chakra-ui/react';
+import { answerQuiz } from '@/util/program/answerQuiz';
+import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 interface Question {
   question: string;
@@ -9,16 +12,19 @@ interface Question {
 
 type Props = {
   details: Question[];
+  quizCode: number,
+  done: boolean
 };
 
 
-const QuizGame = ({ details }: Props) => {
+const QuizGame = ({ details, quizCode, done }: Props) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [timer, setTimer] = useState<number>(0);
   const [points, setPoints] = useState<number[]>([]);
   const [resultsShown, setResultsShown] = useState(false);
+  const wallet = useAnchorWallet()
 
   useEffect(() => {
     setStartTime(new Date());
@@ -37,7 +43,7 @@ const QuizGame = ({ details }: Props) => {
     return isCorrect ? 1 * lessTimeMorePoints : 0;
   };
 
-  const goToNextQuestion = () => {
+  const goToNextQuestion = async () => {
     if (selectedOption === null) return;
 
     const endTime = new Date();
@@ -51,14 +57,17 @@ const QuizGame = ({ details }: Props) => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
     } else {
-      setResultsShown(true);
+      const res = await answerQuiz(wallet as NodeWallet, quizCode, points)
+      if (!res.error) {
+        setResultsShown(true);
+      }
     }
   };
 
   return (
     <Center>
       <Box borderColor="gray.700" p={4} borderRadius="1rem" w="full" maxW="60%" borderWidth="1px">
-        {!resultsShown ? (
+        {!resultsShown && !done ? (
           <>
             <Heading textAlign="center" mb={6} color="white">Q: {details[currentQuestionIndex].question}</Heading>
             <Text textAlign="center" mb={3} color="gray.400">Time Elapsed: {timer} seconds</Text>
@@ -87,7 +96,7 @@ const QuizGame = ({ details }: Props) => {
                 fontSize="2rem"
                 padding="2rem 4rem"
               >
-                Next Question
+                {currentQuestionIndex < details.length - 1 ? 'Next Question' : 'Finish Quiz'}
               </Button>
             </VStack>
 
@@ -106,7 +115,7 @@ const QuizGame = ({ details }: Props) => {
               </Box>
             ))}
             <Text fontSize="xl" mt={4} color="white">
-              Total Points: {points.reduce((acc, point) => acc + point, 0)}
+              Total Points: {Math.round(points.reduce((acc, point) => acc + point, 0))}
             </Text>
           </VStack>
         )}

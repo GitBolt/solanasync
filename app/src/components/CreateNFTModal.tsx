@@ -12,21 +12,24 @@ import {
   Button,
   useDisclosure,
   VStack,
-  IconButton,
   Icon,
   Text,
-  useToast,
   Box,
-  Flex
+  Flex,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from '@chakra-ui/react';
-import { FaUpload, FaQrcode, FaSave, FaMagic } from 'react-icons/fa';
+import { FaUpload, FaQrcode, FaMagic } from 'react-icons/fa';
 import { uploadFile } from '@/util/storage';
-import { DeleteIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
+import { useCustomToast } from '@/hooks/toast';
 
 const CreateNFTCollectionModal: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
+  const toast = useCustomToast()
   const [loading, setLoading] = useState(false);
   const [size, setSize] = useState('');
   const [collectionName, setCollectionName] = useState('');
@@ -46,11 +49,8 @@ const CreateNFTCollectionModal: React.FC = () => {
   const createCollection = async () => {
     if (!collectionName || !symbol || !imageFile) {
       toast({
-        title: 'Error',
-        description: 'All fields are required',
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
+        type: 'error',
+        message: 'All fields are required',
       });
       return;
     }
@@ -61,11 +61,8 @@ const CreateNFTCollectionModal: React.FC = () => {
       const imageUrl = await uploadFile(imageFile);
 
       toast({
-        title: 'Success',
-        description: 'Metadata Uploaded. Processing...',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
+        type: 'info',
+        message: 'Metadata Uploaded. Processing...',
       });
 
       const payload = {
@@ -86,30 +83,21 @@ const CreateNFTCollectionModal: React.FC = () => {
 
       if (res.ok) {
         toast({
-          title: 'Success',
-          description: 'NFT Collection created successfully',
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
+          type: 'success',
+          message: 'NFT Collection created successfully',
         });
 
         router.push("/workshop/" + router.query.id + "/nft")
       } else {
         toast({
-          title: 'Error',
-          description: 'Failed to create NFT Collection',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
+          title: 'error',
+          message: 'Failed to create NFT Collection',
         });
       }
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Network error',
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
+        title: 'error',
+        message: 'Network error',
       });
     } finally {
       setLoading(false);
@@ -118,8 +106,16 @@ const CreateNFTCollectionModal: React.FC = () => {
 
   return (
     <>
-      <Button padding="2rem 0" onClick={onOpen} rounded="2rem" bg="#5F54D8" w="35rem" h="6rem" fontSize="2rem" leftIcon={<Icon as={FaQrcode} />} colorScheme="voilet">
-        Create Collection
+      <Button
+        onClick={onOpen}
+        rounded="2rem"
+        bg="#5F54D8"
+        w="20rem"
+        h="5rem"
+        fontSize="2rem"
+        leftIcon={<Icon as={FaQrcode} />}
+        colorScheme="voilet">
+        Create NFT
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
@@ -166,21 +162,26 @@ const CreateNFTCollectionModal: React.FC = () => {
                 borderColor="#34394D"
                 placeholder="Symbol"
                 fontSize="1.2rem"
+                maxLength={6}
                 color="white"
                 value={symbol}
                 onChange={(e) => setSymbol(e.target.value)}
               />
 
-              <Input
-                bg="#13131A"
-                borderColor="#34394D"
-                placeholder="Size"
-                fontSize="1.2rem"
-                color="white"
-                value={size}
-                onChange={(e) => setSize(e.target.value)}
-              />
-
+              <NumberInput min={1}
+                max={100000}>
+                <NumberInputField bg="#13131A"
+                  borderColor="#34394D"
+                  placeholder="Size"
+                  fontSize="1.2rem"
+                  color="white"
+                  value={size}
+                  onChange={(e) => setSize(e.target.value)} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
 
               <Button
                 isDisabled={loading}
@@ -190,6 +191,7 @@ const CreateNFTCollectionModal: React.FC = () => {
                 fontSize="1.2rem"
                 height="3rem"
                 color="white"
+                isLoading={loading}
                 leftIcon={<FaMagic />}
                 bg="#318151"
                 onClick={createCollection}

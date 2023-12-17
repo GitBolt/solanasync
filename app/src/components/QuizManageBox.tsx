@@ -38,28 +38,21 @@ export const QuizManageBox = ({ publicKey }: Props) => {
   return (
     <Box
       w="100%"
-      p={4}
-      mb={4}
+      p="1rem 2rem"
       minW="20rem"
       bg="#13131A"
-      height="13rem"
+      height="8rem"
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
-      boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)"
       borderRadius="1rem"
       border="1px solid #191A2B"
     >
       <Text fontSize="2rem" alignSelf="flex-start" fontWeight={700} color="white">Quiz</Text>
-
-      <Text fontSize="1.8rem" alignSelf="center" color="#798393">
-        {questionCount} Questions
-      </Text>
-
       <Flex w="100%" justify="space-between">
-        {/* <Text fontSize="1.3rem" color="#485762" alignSelf="flex-start">
-          {date ? date.toDateString() : ''}
-        </Text> */}
+        <Text fontSize="1.8rem" alignSelf="center" color="#798393">
+          {questionCount} Questions
+        </Text>
         <Button isDisabled={!id} onClick={manageStart} height="3rem" fontSize="1.2rem" color="#9A91FF" variant="outline" borderColor="#9A91FF" _hover={{ bg: "#9A91FF", color: "white" }} alignSelf="flex-end">
           Manage Quiz
         </Button>

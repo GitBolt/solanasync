@@ -118,7 +118,15 @@ const CreateQuizModal = ({ setUpdateState }: Props) => {
 
   return (
     <>
-      <Button onClick={onOpen} rounded="2rem" bg="#5F54D8" w="22rem" h="6rem" fontSize="2rem" leftIcon={<Icon as={FaQuestionCircle} />} colorScheme="voilet">
+      <Button
+        onClick={onOpen}
+        rounded="2rem"
+        bg="#5F54D8"
+        w="20rem"
+        h="5rem"
+        fontSize="2rem"
+        leftIcon={<Icon as={FaQuestionCircle} />}
+        colorScheme="voilet">
         Create Quiz
       </Button>
 

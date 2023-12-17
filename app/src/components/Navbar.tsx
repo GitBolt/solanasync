@@ -14,8 +14,8 @@ export const Navbar = () => {
       </Link>
 
       <Flex gap="2rem" align="center">
-        <Link href="https://github.com/solana-workshops"><Text fontSize="1.2rem" color="gray.300" fontWeight={600} >Resources</Text></Link>
-        <Link href="/guide"><Text fontSize="1.2rem" color="gray.300" fontWeight={600} >Guide</Text></Link>
+        <Link href="https://github.com/solana-workshops"><Text fontSize="1.2rem" color="gray.300" fontWeight={400} >Resources</Text></Link>
+        <Link href="/guide"><Text fontSize="1.2rem" color="gray.300" fontWeight={400} >Guide</Text></Link>
         <Wallets />
       </Flex>
     </Flex>

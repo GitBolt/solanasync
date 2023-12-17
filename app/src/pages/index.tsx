@@ -35,32 +35,32 @@ const WorkshopLandingPage = () => {
       fetchData()
     }
   }, [publicKey])
+
   return (
     <>
       <DefaultHead />
       <Navbar />
       <Flex
-
         direction="column"
         align="center"
         justify="center"
         p={12}
         bg="#0E0E10"
       >
-        <VStack spacing={4} mb={6} textAlign="center">
+        <VStack textAlign="center">
           <Heading as="h1" fontWeight="100" fontSize="5.3rem" maxW="80%" color="white">
             <span style={{ color: "#7B70FF" }}>Supercharge</span> Your Solana Workshops
           </Heading>
           <Text fontSize="2rem" color="#9694B6">
-            Conduct your next IRL Solana workshop with ease while making them more fun
+            Conduct your next IRL Solana workshop with ease while making it more fun
           </Text>
           <Button
-            size="lg"
             background="#5F54D8"
             color="white"
-            borderRadius="1rem"
+            borderRadius="2rem"
             fontSize="2rem"
-            padding="2rem 3rem"
+            padding="2.2rem 3rem"
+            mt="2rem"
             onClick={() => router.push(workshopsExist ? "/new" : "/dashboard")}
             zIndex={100}
             _hover={{ background: "#9A91FF" }}
@@ -69,7 +69,7 @@ const WorkshopLandingPage = () => {
           </Button>
         </VStack>
 
-        <Box width="100vw" pos="absolute" transform="translate(0, -2rem)" zIndex={0}>
+        <Box width="100vw" pos="absolute" transform="translate(0, -3rem)" zIndex={0}>
           <img src="/lines.png" style={{ width: "100%", height: "100%" }} />
         </Box>
 
@@ -99,12 +99,18 @@ const WorkshopLandingPage = () => {
 
 const Feature = ({ icon, title, text }: { icon: React.ElementType; title: string; text: string }) => {
   return (
-    <VStack align="start" background="#13131A" border="1px solid" borderColor="#1D1E27" borderRadius="35px" padding="20px 30px">
+    <VStack
+      align="start"
+      background="#13131A"
+      border="2px solid #232437"
+      boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)"
+      borderRadius="2rem"
+      padding="1.5rem 1.5rem">
       <Flex background="#31315E" borderRadius="100%" padding="15px">
-        <Box as={icon} size="2.5rem" color="#AFB5F6" />
+        <Box as={icon} size="2rem" color="#AFB5F6" />
       </Flex>
-      <Text fontWeight="semibold" fontSize="2rem" color="#C0C6F4">{title}</Text>
-      <Text color={useColorModeValue('gray.600', 'gray.200')} fontSize="1.5rem">{text}</Text>
+      <Text fontWeight="semibold" fontSize="1.8rem" color="#C0C6F4">{title}</Text>
+      <Text color="gray.600" fontSize="1.4rem">{text}</Text>
     </VStack>
   );
 };

@@ -1,12 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-// Components
 import React from 'react';
-import {
-  useWallet,
-  Wallet as SolanaWallet,
-} from '@solana/wallet-adapter-react';
-
-// Layouts
+import { useWallet, Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
 import {
   Menu,
   MenuButton,
@@ -16,58 +9,92 @@ import {
   Text,
   Button,
   Box,
-  useToast,
+  Divider,
 } from '@chakra-ui/react';
-
-// Icons
-import { ChevronDownIcon } from '@chakra-ui/icons';
-
-// Util
 import { truncatedPublicKey } from '@/util/helper';
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import { FiCopy, FiDelete } from 'react-icons/fi';
+import { useCustomToast } from '@/hooks/toast';
 
+// Styles configuration
+const styleConfig = {
+  button: {
+    background: "#5249B1",
+    hoverBackground: "#645CC7",
+    color: "white",
+    width: "13rem",
+    borderRadius: "0.9rem",
+    border: "1px solid #4B42B0"
+  },
+  menuItem: {
+    height: "2.5rem",
+    color: "#A8A8E3",
+    background: "#13151D",
+    fontSize: "1.2rem",
+    fontWeight: 400,
+    gap: '0.8rem',
+  },
+  menuList: {
+    padding: "0.5rem",
+    background: "#13151D",
+    borderRadius: "0.6rem",
+    border: "1px solid #1E2132",
+    boxShadow: "0px -4px 4px 0px rgba(0, 0, 0, 0.17)",
+  },
+  iconBox: {
+    height: "1.5rem",
+    width: "1.5rem",
+    iconColor: "#5F54D8"
+  },
+};
 
-const ConnectWalletButton = () => {
+const ConnectWalletButton: React.FC = () => {
   const { wallets, select, connected, publicKey, wallet, connect } = useWallet();
-  const toast = useToast()
+  const toast = useCustomToast()
 
   const copyPublicKey = () => {
-    navigator.clipboard.writeText(publicKey?.toBase58() || '');
-    toast({ status: "success", title: 'Copied Address' })
+    if (!publicKey) {
+      toast({
+        type: "error",
+        message: "Public key could not copied"
+      })
+      return
+    }
+    navigator.clipboard.writeText(publicKey.toBase58());
+    toast({ type: "success", message: 'Copied Address' });
   };
 
   const onConnectWallet = async (wallet: SolanaWallet) => {
-    try {
-      console.log('Connection event', wallet.readyState);
-      select(wallet.adapter.name);
-      await connect();
-    } catch (e) {
-      console.log("Wallet Error: ", e);
-      // toast({ status: "info", title: 'A non-critical error occured. Try connecting again.' })
-    }
+    console.log('Connection event', wallet.readyState);
+    select(wallet.adapter.name);
   };
 
   return (
     <Menu>
       <MenuButton
         as={Button}
-        _hover={{ background: "#9A91FF" }}
-        background="#5F54D8"
-        color="white"
-        w="13rem"
-        borderRadius="0.5rem"
+        _active={{ background: styleConfig.button.hoverBackground }}
+        _hover={{ background: styleConfig.button.hoverBackground }}
+        background={styleConfig.button.background}
+        color={styleConfig.button.color}
+        w={styleConfig.button.width}
+        border={styleConfig.button.border}
+        borderRadius={styleConfig.button.borderRadius}
         rightIcon={
           connected && wallet ? (
-            <Box h="1.5rem" w="1.5rem" mr="1rem">
+            <Box {...styleConfig.iconBox}>
               <img
                 src={wallet.adapter.icon}
                 alt={`${wallet.adapter.name} Icon`}
               />
             </Box>
-          ) : <ChevronDownIcon color="white" w="1.5rem" h="1.5rem" />
+          ) : <Box {...styleConfig.iconBox}>
+            <ChevronDownIcon color="white" {...styleConfig.iconBox} />
+          </Box>
         }
       >
         {!connected && <Text fontSize="1.2rem">Connect Wallet</Text>}
-        {connected && wallet !== null && (
+        {connected && wallet && (
           <Text fontSize="1.2rem">
             {truncatedPublicKey(publicKey!.toString(), 4)}
           </Text>
@@ -75,84 +102,62 @@ const ConnectWalletButton = () => {
       </MenuButton>
 
       {connected && (
-        <MenuList
-          w="10rem"
-          p="0.5rem"
-          bg="#13131A"
-          borderRadius="1rem"
-        >
-          <MenuItem
-            h="3rem"
-            bg="#13131A"
-            onClick={copyPublicKey}>
-            <Text fontSize="1.2rem" color="blue.100" fontWeight={500}>Copy Address</Text>
+        <MenuList {...styleConfig.menuList}>
+          <MenuItem {...styleConfig.menuItem} onClick={copyPublicKey}>
+            <FiCopy color={styleConfig.iconBox.iconColor} />
+            Copy Address
           </MenuItem>
+
+          <Divider my="0.2rem" border="1px solid #1E2132" />
+
           <MenuItem
-            h="3rem"
-            bg="#13131A"
+            {...styleConfig.menuItem}
             onClick={async () => {
-              if (wallet == null) {
-                return;
+              if (wallet) {
+                await wallet.adapter.disconnect();
+                toast({
+                  type: "success",
+                  message: "Disconnected wallet"
+                })
               }
-              await wallet.adapter.disconnect();
             }}
           >
-            <Text fontSize="1.2rem" color="blue.100" fontWeight={500}>
-              Disconnect
-            </Text>
+            <FiDelete color={styleConfig.iconBox.iconColor} />
+            Disconnect
           </MenuItem>
         </MenuList>
       )}
 
-
       {!connected && wallets && (
-        <MenuList
-          w="10rem"
-          p="0.5rem"
-          bg="#13131A"
-          borderRadius="1rem"
-        >
-          {wallets.map((wallet: SolanaWallet) => {
-            return (
-              <MenuItem
-                key={wallet.adapter.name}
-                h="3rem"
-                bg="#13131A"
-                onClick={async () => {
-                  try {
-                    onConnectWallet(wallet)
-                  } catch (e: any) {
-                    console.log(e)
-                  }
-                }}
-              >
-                <Flex gap="1rem" align="center">
-                  <Box w="2rem" h="2rem">
-                    <img
-                      width={100}
-                      loading="lazy"
-                      src={
-                        wallet.adapter.icon
-                      }
-                      alt={`${wallet.adapter.name} Icon`}
-                    />
-                  </Box>
-                  <Text
-                    fontSize="1.2rem"
-                    ml={2}
-                    fontWeight={600}
-                    color="blue.100"
-                  >
-                    {wallet.adapter.name}
-                  </Text>
-                </Flex>
-              </MenuItem>
-            );
-          })}
+        <MenuList {...styleConfig.menuList}>
+          {wallets.map((wallet: SolanaWallet) => (
+            <MenuItem
+              key={wallet.adapter.name}
+              {...styleConfig.menuItem}
+              onClick={async () => {
+                  onConnectWallet(wallet);
+              }}
+            >
+              <Flex gap="1rem" align="center" justify="center">
+                <Box {...styleConfig.iconBox}>
+                  <img
+                    width={100}
+                    loading="lazy"
+                    src={wallet.adapter.icon}
+                    alt={`${wallet.adapter.name} Icon`}
+                  />
+                </Box>
+                <Text>
+                  {wallet.adapter.name}
+                </Text>
+              </Flex>
+
+            </MenuItem>
+          ))}
         </MenuList>
       )}
     </Menu>
   );
 };
 
-export default ConnectWalletButton
+export default ConnectWalletButton;

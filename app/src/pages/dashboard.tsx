@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Flex, Heading, VStack, HStack, Text, Icon, Grid, LinkBox, LinkOverlay } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, VStack, HStack, Text, Icon, Grid, LinkBox, LinkOverlay, Center, Divider } from '@chakra-ui/react';
 import { Navbar } from '@/components/Navbar';
-import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaCertificate, FaCheckCircle, FaMapMarkerAlt, FaQuestionCircle, FaTimesCircle } from 'react-icons/fa';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/router';
 
@@ -10,9 +10,11 @@ type Props = {
   date: string,
   location: string,
   id: string,
+  nft: boolean,
+  quiz: boolean,
 }
 
-const WorkshopItem = ({ title, date, location, id }: Props) => (
+const WorkshopItem = ({ title, date, location, id, nft, quiz }: Props) => (
   <LinkBox
     w="100%"
     p={4}
@@ -26,32 +28,57 @@ const WorkshopItem = ({ title, date, location, id }: Props) => (
     border="1px solid #191A2B"
   >
     <LinkOverlay href={"/workshop/" + id}>
-      <Text fontSize="1.5rem" color="white" mb={2}>{title}</Text>
+      <Text fontSize="1.5rem" color="white" fontWeight={700} mb={2}>{title}</Text>
     </LinkOverlay>
     <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center" mb={1}>
       <Icon as={FaCalendarAlt} color="#838DE9" mr={2} />
-      <Text fontSize="1.3rem" color="#A0A3C1">{new Date(date).toLocaleDateString()}</Text>
+      <Text fontSize="1.3rem" color="#7C7E97">{new Date(date).toLocaleString()}</Text>
     </Flex>
     <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center">
       <Icon as={FaMapMarkerAlt} color="#838DE9" mr={2} />
-      <Text fontSize="1.3rem" color="#A0A3C1">{location}</Text>
+      <Text fontSize="1.3rem" color="#7C7E97">{location}</Text>
+    </Flex>
+
+    <Divider borderColor="#282B4D" my="0.6rem" />
+
+    <Flex justifyContent="space-between" alignItems="center">
+      <Box>
+        <Flex align="center">
+          <Text fontSize="1rem" color="#8F90A2" mr={2}>Quiz</Text>
+          {quiz ? <Icon as={FaCheckCircle} color="#35C64C" /> : <Icon as={FaTimesCircle} color="red" />}
+        </Flex>
+        <Flex align="center">
+          <Text fontSize="1rem" color="#8F90A2" mr={2}>Solana Pay NFT</Text>
+          {nft ? <Icon as={FaCheckCircle} color="#35C64C" /> : <Icon as={FaTimesCircle} color="red" />}
+        </Flex>
+      </Box>
     </Flex>
   </LinkBox>
 );
 
+
+
+
 const WorkshopLandingPage = () => {
-  const [workshops, setWorkshops] = useState([]);
+  const [upcomingWorkshops, setUpcomingWorkshops] = useState([]);
+  const [pastWorkshops, setPastWorkshops] = useState([]);
   const { publicKey } = useWallet();
   const router = useRouter();
-  
+
   useEffect(() => {
     const fetchWorkshops = async () => {
       if (!publicKey) return;
       try {
         const response = await fetch(`/api/workshops/${publicKey}`);
         const data = await response.json();
-        const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        setWorkshops(sortedWorkshops);
+        const now = new Date();
+        const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        const upcoming = sortedWorkshops.filter((workshop: any) => new Date(workshop.date) >= now);
+        const past = sortedWorkshops.filter((workshop: any) => new Date(workshop.date) < now);
+
+        setUpcomingWorkshops(upcoming);
+        setPastWorkshops(past);
       } catch (error) {
         console.error('Error fetching workshops:', error);
       }
@@ -60,10 +87,26 @@ const WorkshopLandingPage = () => {
     fetchWorkshops();
   }, [publicKey]);
 
+  const renderWorkshops = (workshops: any) => (
+    <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" }} gap={6}>
+      {workshops && workshops.length ? workshops.map((workshop: any) => (
+        <WorkshopItem
+          title={workshop.name}
+          date={workshop.date}
+          location={workshop.location}
+          id={workshop._id}
+          key={workshop._id}
+          nft={workshop.cNFTMetadata}
+          quiz={workshop.quizMetadata}
+        />
+      )) : <Text fontSize="2rem" color="white">Nothing here</Text>}
+    </Grid>
+  );
+
   return (
     <>
       <Navbar />
-      <Flex
+      {publicKey ? <Flex
         direction="column"
         align="start"
         justify="center"
@@ -89,24 +132,18 @@ const WorkshopLandingPage = () => {
         </Flex>
         <VStack align="start" spacing={4}>
           <Heading as="h2" fontWeight="600" fontSize="2rem" color="#838DE9" mb={4}>
-            Workshops
+            Upcoming Workshops
           </Heading>
-          <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" }} gap={6}>
-            {workshops.map((workshop: any) => (
-              <WorkshopItem
-                title={workshop.name}
-                date={workshop.date}
-                location={workshop.location}
-                id={workshop._id}
-                key={workshop._id}
-              />
-            ))}
-          </Grid>
+          {renderWorkshops(upcomingWorkshops)}
+
+          <Heading as="h2" fontWeight="600" fontSize="2rem" color="#838DE9" mb={4} mt={10}>
+            Past Workshops
+          </Heading>
+          {renderWorkshops(pastWorkshops)}
         </VStack>
-      </Flex>
+      </Flex> : <Center><Text fontSize="2rem" color="white">Connect wallet to get started</Text></Center>}
     </>
   );
 };
 
 export default WorkshopLandingPage;
-``

@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }
       )
-
+      
       res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
     } catch (error) {
       console.log(error)

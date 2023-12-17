@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           name: name,
           symbol: symbol,
           uri: nftImageUri,
-          sellerFeeBasisPoints: 100,
+          sellerFeeBasisPoints: 0,
           creators: [
             {
               address: payer.publicKey,

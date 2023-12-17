@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, VStack, Text, Input, Button, Flex } from '@chakra-ui/react';
+import { Box, VStack, Text, Input, Button, Flex, Center } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useCustomToast } from '@/hooks/toast';
@@ -30,14 +30,18 @@ const QuizJoinPage = () => {
         });
       }
       const res = await getQuizByCode(wallet as NodeWallet, Number(router.query.code));
-      if (!res || !res.account || res.error) return
+      console.log(res)
+      if (!res || !res.account || res.error) {
+        toast({
+          type: "error",
+          message: "Error fetching quiz details"
+        })
+      }
       if (res.account.owner.toBase58() === publicKey?.toBase58()) {
+        setStarted(res.account.isStarted)
+        setStopped(res.account.isDone)
         setHasPermission(true);
         setQuizDetails(res);
-        if (res.account.isDone) {
-          setStopped(true)
-          setStarted(true)
-        }
       }
     };
 
@@ -90,10 +94,22 @@ const QuizJoinPage = () => {
       <Navbar />
       {started ? <>
         {!stopped ? <Box>
-          <Text>Quiz Started!</Text>
-          <Button onClick={handleStop}>Stop Quiz</Button>
+          <Center>
+            <Flex flexFlow="column" align="center">
+              <Text color="white" fontSize="3rem">Quiz Started!</Text>
+              <Button
+                background="#5F54D8"
+                _hover={{bg:"#5F54D8"}}
+                color="white"
+                borderRadius="2rem"
+                fontSize="2rem"
+                padding="2.2rem 3rem"
+                mt="2rem"
+                onClick={handleStop}>Stop Quiz</Button>
+            </Flex>
+          </Center>
         </Box> :
-          <Leaderboard quizCode={Number(router.query.code)}/>}
+          <Leaderboard quizCode={Number(router.query.code)} />}
       </> : <VStack spacing={8} align="center" justify="center" w="full" pt={12} pb={12}>
         <Box w="40rem" bg="#13131A" borderRadius="lg" p={8} boxShadow="xl">
           <VStack spacing={6}>

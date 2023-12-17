@@ -61,7 +61,7 @@ export const QuizManageBox = ({ publicKey }: Props) => {
           {date ? date.toDateString() : ''}
         </Text> */}
         <Button isDisabled={!id} onClick={manageStart} height="3rem" fontSize="1.2rem" color="#9A91FF" variant="outline" borderColor="#9A91FF" _hover={{ bg: "#9A91FF", color: "white" }} alignSelf="flex-end">
-          Start Quiz
+          Manage Quiz
         </Button>
       </Flex>
     </Box>

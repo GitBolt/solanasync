@@ -8,9 +8,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/router';
 import { QuizManageBox } from '@/components/QuizManageBox';
 
-const workshopName = "IITD"
-const location = "NYC"
-const date = "12 Jan, 2023"
 
 const WorkshopPage = () => {
 
@@ -27,6 +24,7 @@ const WorkshopPage = () => {
       try {
         const response = await fetch(`/api/workshops/id/${router.query.id}`);
         const data = await response.json();
+        console.log("Workshop: ", data)
         setWorkshop(data);
       } catch (error) {
         console.error('Error fetching workshops:', error);
@@ -59,7 +57,7 @@ const WorkshopPage = () => {
         bg="#0E0E10"
       >
         <Box
-          w="100%"
+          w="60%"
           p={4}
           mb={4}
           bg="#13131A"
@@ -68,10 +66,10 @@ const WorkshopPage = () => {
           border="1px solid #191A2B"
         >
           <Heading as="h1" fontWeight="600" fontSize="2.5rem" color="white" textAlign="center" mb={4}>
-            {workshopName}
+            {workshop.name}
           </Heading>
-          <Text fontSize="1.5rem" color="#A0A3C1" textAlign="center" mb={2}>{date}</Text>
-          <Text fontSize="1.5rem" color="#A0A3C1" textAlign="center" mb={4}>{location}</Text>
+          <Text fontSize="1.5rem" color="#A0A3C1" textAlign="center" mb={2}>{new Date(workshop.date).toLocaleString()}</Text>
+          <Text fontSize="1.5rem" color="#A0A3C1" textAlign="center" mb={4}>{workshop.location}</Text>
         </Box>
 
         <VStack spacing={6} mt="5rem" w="100%" align="center">

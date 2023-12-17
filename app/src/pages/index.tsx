@@ -78,17 +78,17 @@ const WorkshopLandingPage = () => {
             <Feature
               icon={FiCamera}
               title="Gasless NFT For Audience"
-              text="Distribute gasless NFTs by scanning QR"
+              text="Distribute gasless NFTs by scanning QR powered by Solana pay"
             />
             <Feature
               icon={FiList}
               title="Conduct On-Chain Quizzes"
-              text="Engage your audience with Solana powered quizzes."
+              text="Engage your audience with Solana powered quizzes"
             />
             <Feature
               icon={FiActivity}
               title="Management Dashboard"
-              text="Monitor and manage your workshop with a simple dashboard"
+              text="Manage and keep track of your workshops with a simple dashboard"
             />
           </SimpleGrid>
         </Box>

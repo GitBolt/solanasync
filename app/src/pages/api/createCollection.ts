@@ -70,7 +70,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               metadataAccount: collection.metadataAccount.toBase58(),
               masterEditionAccount: collection.masterEditionAccount.toBase58(),
               size: size,
-              uri: nftImageUri
+              uri: nftImageUri,
+              name: name,
+              symbol: symbol,
             }
           }
         }

@@ -55,8 +55,8 @@ export default async function handler(
       }
       
       const nftMetadata: MetadataArgs = {
-        name: "NFT NAME",
-        symbol: "HEY",
+        name: workshop.cNFTMetadata.name,
+        symbol: workshop.cNFTMetadata.symbol,
         uri: workshop.cNFTMetadata.uri,
         creators: [
           {

@@ -9,6 +9,10 @@ const LinkInput = ({ id, label, link, onUpdate, isEditing, setIsEditing }: any) 
   const [currentLink, setCurrentLink] = useState(link);
   const toast = useToast();
 
+
+  useEffect(() => {
+    setCurrentLink(link)
+  }, [link])
   const handleSave = async () => {
     try {
       const response = await fetch(`/api/updateWorkshop`, {
@@ -65,21 +69,20 @@ const LinkInput = ({ id, label, link, onUpdate, isEditing, setIsEditing }: any) 
       ) : (
         <>
           {currentLink ? (
-            <>
-              <a href={currentLink} target="_blank" style={{ fontSize: "2rem", color: "#0087ff", textDecoration: "underline" }}>
+            <Flex align="center" justify="center" gap="2rem">
+              <a href={currentLink} target="_blank" style={{ fontSize: "2.5rem", color: "#0087ff", textDecoration: "underline" }}>
                 {label}
               </a>
               <IconButton
                 aria-label="Edit"
                 color="white"
-                style={{ marginLeft: "1rem" }}
                 bg="blue.600"
                 _hover={{ bg: "blue.400" }}
                 icon={<EditIcon />}
                 onClick={() => setIsEditing(true)}
-                size="lg"
+                size="md"
               />
-            </>
+            </Flex>
           ) : (
             <Button
               fontSize="1.8rem"

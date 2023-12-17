@@ -88,7 +88,7 @@ const CreateQuizModal = ({ setUpdateState }: Props) => {
     setLoading(true)
     const res = await uploadJson(JSON.stringify(questions))
     if (res) {
-      toast({ type: "success", message: "Link Uploaded", linkTitle: "See On-Chain Quiz Details", link: res })
+      toast({ type: "info", message: "Link Uploaded. Processing...", linkTitle: "See On-Chain Quiz Details", link: res })
       const quizRes = await createQuizAccount(
         wallet as NodeWallet,
         res,
@@ -187,7 +187,7 @@ const CreateQuizModal = ({ setUpdateState }: Props) => {
                 Add Question
               </Button>
               <Button
-                isDisabled={loading}
+                isLoading={loading}
                 _hover={{ bg: "green" }} alignSelf="center" w="30%" fontSize="1.2rem" height="3rem" rightIcon={<FaSave />} bg="#318151" onClick={saveQuiz}>
                 Save Quiz
               </Button>

@@ -48,7 +48,7 @@ const QuizJoinPage = () => {
     fetchData();
   }, [publicKey, wallet, router.query]);
 
-  if (!hasPermission) {
+  if (quizDetails && !hasPermission) {
     return (
       <>
         <Navbar />

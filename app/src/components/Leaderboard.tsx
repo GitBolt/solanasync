@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, Box, Text } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Box, Text, Center } from '@chakra-ui/react';
 import { getTopUsers } from '@/util/program/getTopUsers';
 import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
@@ -43,8 +43,8 @@ const Leaderboard = ({ quizCode }: Props) => {
   return (
     <Box maxW="80%" mx="auto" bg="gray.800" p={4} borderRadius="lg">
       <Text color="white" fontSize="2rem" fontWeight={600} mb="2rem">Results</Text>
-      {isLoading ? (
-        <div>Loading...</div>
+      {!users || !users.length ? (
+        <Center><Text color="white" fontSize="2rem">No Participants :(</Text></Center>
       ) : (
         <Table variant="simple" colorScheme="whiteAlpha">
           <Thead>

@@ -15,8 +15,8 @@ const WorkshopSchema = new Schema({
   date: Date,
   quizMetadata: Schema.Types.Mixed,
   cNFTMetadata: Schema.Types.Mixed,
-  importantLinks: [String],
   owner: { type: String, ref: 'User', required: true },
+  links: Schema.Types.Mixed,
 });
 
 

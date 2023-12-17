@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ message: 'Name, location, date and ownerPubKey are required' });
       }
       await dbConnect()
-      const newWorkshop = new Workshop({ name, location, date, owner: ownerPubKey });
+      const newWorkshop = new Workshop({ name, location, date, owner: ownerPubKey, links: {} });
       await newWorkshop.save();
 
       res.status(200).json({ message: 'Created workshop' });

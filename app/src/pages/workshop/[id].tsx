@@ -7,6 +7,7 @@ import CreateNFTCollectionModal from '@/components/CreateNFTModal';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/router';
 import { QuizManageBox } from '@/components/QuizManageBox';
+import LinksComponent from '@/components/LinkInput';
 
 const WorkshopPage = () => {
 
@@ -102,7 +103,7 @@ const WorkshopPage = () => {
                   display="flex"
                   justifyContent="center"
                   minW="100%"
-                  _hover={{bg:"#25242f"}}
+                  _hover={{ bg: "#25242f" }}
                   alignItems="center"
                   height="8rem"
                   alignContent="center"
@@ -115,7 +116,7 @@ const WorkshopPage = () => {
           </Box>
 
           <Box w="50%" p={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
-            <Heading color="#505161" mb={4}>Links</Heading>
+            {workshop ? <LinksComponent workshop={workshop}/> : null}
           </Box>
         </Flex>
       </Flex> : <Center><Text fontSize="3rem" color="white">Connect Wallet Required</Text></Center>}

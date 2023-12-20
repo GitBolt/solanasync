@@ -50,18 +50,18 @@ const QuizGame = ({ details, quizCode, done }: Props) => {
     const timeTaken = Math.max(0, (endTime.getTime() - (startTime?.getTime() || 0)) / 1000 - 1);
     const isCorrect = selectedOption === details[currentQuestionIndex].correctOptionIndex;
 
-    setPoints([...points, calculatePoints(timeTaken, isCorrect)]);
     setTimer(0);
 
     if (currentQuestionIndex < details.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
     } else {
-      const res = await answerQuiz(wallet as NodeWallet, quizCode, points)
+      const res = await answerQuiz(wallet as NodeWallet, quizCode, [...points, calculatePoints(timeTaken, isCorrect)])
       if (!res.error) {
         setResultsShown(true);
       }
     }
+    setPoints([...points, calculatePoints(timeTaken, isCorrect)]);
   };
 
   return (

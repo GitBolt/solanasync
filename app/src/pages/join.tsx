@@ -29,6 +29,7 @@ const JoinQuizPage = () => {
   const [quizDetails, setQuizDetails] = useState<any>()
   const wallet = useAnchorWallet()
   const [done, setDone] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleJoinClick = async () => {
 
@@ -45,18 +46,19 @@ const JoinQuizPage = () => {
       });
       return;
     }
+    setLoading(true)
     const res = await getQuizByCode(wallet as NodeWallet, Number(quizRoom))
     if (!res.error) {
-      console.log("RES OF QUIZ GET: ", res)
       if (res.account.isDone) {
-        return toast ({
-          type:"error",
-          message:"Quiz is over"
+        setLoading(false)
+        return toast({
+          type: "error",
+          message: "Quiz is over"
         })
       }
       const quizUserResBe = await getQuizUser(wallet as NodeWallet, Number(quizRoom), publicKey.toBase58())
       if (quizUserResBe.details) {
-        setQuizUser({user: ''})
+        setQuizUser({ user: '' })
         return toast({
           type: "success",
           message: "Quiz User Exists. Waiting for Quiz to start..."
@@ -64,13 +66,16 @@ const JoinQuizPage = () => {
       }
       const quizUserRes = await createQuizUserAccount(wallet as NodeWallet, Number(quizRoom), name)
       if (!quizUserRes.error) {
-        setQuizUser({user: ''})
+        setQuizUser({ user: '' })
         return toast({
           type: "success",
           message: "Created Quiz Account. Waiting for Quiz to start..."
         })
       }
+      setLoading(false)
+
     } else {
+      setLoading(false)
       return toast({
         type: "error",
         message: "No quiz with the ID found"
@@ -150,31 +155,31 @@ const JoinQuizPage = () => {
               </Heading>
 
 
-            <FormControl id="name" isRequired>
-              <FormLabel color="#C0C6F4" fontSize="lg">Name</FormLabel>
-              <Input
-                borderColor="#1D1E27"
-                color="white"
-                fontSize="1.2rem"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                size="lg"
-              />
-            </FormControl>
+              <FormControl id="name" isRequired>
+                <FormLabel color="#C0C6F4" fontSize="lg">Name</FormLabel>
+                <Input
+                  borderColor="#1D1E27"
+                  color="white"
+                  fontSize="1.2rem"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  size="lg"
+                />
+              </FormControl>
 
-            <FormControl id="quiz-room" isRequired>
-              <FormLabel color="#C0C6F4" fontSize="lg">Quiz ID</FormLabel>
-              <Input
-                fontSize="1.2rem"
-                borderColor="#1D1E27"
-                color="white"
-                value={quizRoom}
-                onChange={(e) => setQuizRoom(e.target.value)}
-                size="lg"
-              />
-            </FormControl>
+              <FormControl id="quiz-room" isRequired>
+                <FormLabel color="#C0C6F4" fontSize="lg">Quiz ID</FormLabel>
+                <Input
+                  fontSize="1.2rem"
+                  borderColor="#1D1E27"
+                  color="white"
+                  value={quizRoom}
+                  onChange={(e) => setQuizRoom(e.target.value)}
+                  size="lg"
+                />
+              </FormControl>
 
-            {quizUser ? (
+              {quizUser ? (
                 <Text color="white" fontSize="2rem">
                   You've joined the quiz, waiting for it to start...
                 </Text>
@@ -184,6 +189,7 @@ const JoinQuizPage = () => {
                   onClick={handleJoinClick}
                   color="white"
                   bg="#5F54D8"
+                  isLoading={loading}
                   width="50%"
                   _hover={{ background: "#9A91FF" }}
                   size="lg"

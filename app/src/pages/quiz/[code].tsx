@@ -9,6 +9,7 @@ import { getQuizByCode } from '@/util/program/getQuizByCode';
 import { startQuiz } from '@/util/program/startQuiz';
 import { closeQuiz } from '@/util/program/closeQuiz';
 import Leaderboard from '@/components/Leaderboard';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const QuizJoinPage = () => {
   const [hasPermission, setHasPermission] = useState(false);
@@ -91,7 +92,20 @@ const QuizJoinPage = () => {
 
   return (
     <>
+
       <Navbar />
+      <Button
+        leftIcon={<FaArrowLeft />}
+        color="#5F54D8"
+        borderColor="#5F54D8"
+        _hover={{ bg: "transparent" }}
+        variant="outline"
+        ml="12rem"
+        mb="2rem"
+        onClick={() => router.push("/workshop/" + quizDetails.account.workshopDbId)}
+      >
+        Back to Workshop
+      </Button>
       {started ? <>
         {!stopped ? <Box>
           <Center>
@@ -99,7 +113,7 @@ const QuizJoinPage = () => {
               <Text color="white" fontSize="3rem">Quiz Started!</Text>
               <Button
                 background="#5F54D8"
-                _hover={{bg:"#5F54D8"}}
+                _hover={{ bg: "#5F54D8" }}
                 color="white"
                 borderRadius="2rem"
                 fontSize="2rem"
@@ -109,7 +123,11 @@ const QuizJoinPage = () => {
             </Flex>
           </Center>
         </Box> :
-          <Leaderboard quizCode={Number(router.query.code)} />}
+          <>
+
+            <Leaderboard quizCode={Number(router.query.code)} />
+          </>
+        }
       </> : <VStack spacing={8} align="center" justify="center" w="full" pt={12} pb={12}>
         <Box w="40rem" bg="#13131A" borderRadius="lg" p={8} boxShadow="xl">
           <VStack spacing={6}>

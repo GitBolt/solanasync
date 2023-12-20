@@ -19,7 +19,7 @@ export const getQuizUser = async (
       },
       {
         memcmp: {
-          offset: 8 + 12,
+          offset: 8 + 4,
           bytes: new anchor.web3.PublicKey(publicKey).toBase58(),
         },
       },

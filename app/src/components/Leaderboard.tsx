@@ -29,7 +29,7 @@ const Leaderboard = ({ quizCode }: Props) => {
 
       if (fetchedUsers.error) return;
       const processedUsers = fetchedUsers.data.map((user: any) => ({
-        publicKey: truncatedPublicKey(user.publicKey.toBase58(), 5),
+        publicKey: truncatedPublicKey(user.account.owner.toBase58(), 5),
         points: user.account.points.reduce((acc: number, val: number) => acc + val, 0),
         username: user.account.name
       })).sort((a: any, b: any) => b.points - a.points);

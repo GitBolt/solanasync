@@ -12,7 +12,7 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 
 type Props = { children?: React.ReactNode }
 export const Wallet: FC<Props> = ({ children }: Props) => {
-  const network = WalletAdapterNetwork.Mainnet;
+  const network = WalletAdapterNetwork.Devnet;
 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);

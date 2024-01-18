@@ -17,7 +17,7 @@ export default function Workshop() {
             <UnorderedList spacing={3} mt={4}>
               <ListItem fontSize="1.4rem">
                 <Text as="span" fontWeight="bold">Audience Arrangement: </Text>
-                Ask the audience to sit in the front rows if seats are available instead of going all the way back (some people do that by default). This would ensure better photos and a more organized appearance. This also makes visibility and sound better from our presentation. Workshop hosts or assistants also have easier and faster times reaching out to people in the audience for questions, errors, installations etc.
+                Encourage the audience to sit in the front rows if seats are available instead of going all the way back to ensure better photos and a more organized appearance. This adjustment makes visibility and sound better as well. Worksho phosts or assistants also have easier and faster times reaching out to people in the audience for questions, errors, installations etc.
               </ListItem>
 
               <ListItem fontSize="1.4rem">

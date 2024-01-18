@@ -57,51 +57,45 @@ const CreateNFTCollectionModal: React.FC = () => {
 
     setLoading(true);
 
-    try {
-      const imageUrl = await uploadFile(imageFile);
 
-      toast({
-        type: 'info',
-        message: 'Metadata Uploaded. Processing...',
-      });
+    const imageUrl = await uploadFile(imageFile);
 
-      const payload = {
-        name: collectionName,
-        symbol: symbol,
-        workshopId: router.query.id,
-        nftImageUri: imageUrl,
-        size: size
-      };
+    toast({
+      type: 'info',
+      message: 'Metadata Uploaded. Processing...',
+    });
 
-      const res = await fetch("/api/createCollection", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+    const payload = {
+      name: collectionName,
+      symbol: symbol,
+      workshopId: router.query.id,
+      nftImageUri: imageUrl,
+      size: size
+    };
 
-      if (res.ok) {
-        toast({
-          type: 'success',
-          message: 'NFT Collection created successfully',
-        });
-
-        router.push("/workshop/" + router.query.id + "/nft")
-      } else {
-        toast({
-          title: 'error',
-          message: 'Failed to create NFT Collection',
-        });
+    const res = await fetch("/api/createCollection", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
       }
-    } catch (error) {
+    });
+
+    if (res.ok) {
+      toast({
+        type: 'success',
+        message: 'NFT Collection created successfully',
+      });
+
+      router.push("/workshop/" + router.query.id + "/nft")
+    } else {
       toast({
         title: 'error',
-        message: 'Network error',
+        message: 'Failed to create NFT Collection',
       });
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
+
   };
 
   return (

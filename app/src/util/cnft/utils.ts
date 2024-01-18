@@ -217,7 +217,6 @@ export async function createCollection(
     // send the transaction to the cluster
     const txSignature = await sendAndConfirmTransaction(connection, tx, [payer], {
       commitment: "confirmed",
-      skipPreflight: true,
     });
 
     console.log("\nCollection successfully created!");

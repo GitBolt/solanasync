@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         new Uint8Array(JSON.parse(process.env.GAS_KEY as string))
       );
 
-      const CLUSTER_URL = process.env.RPC_URL || clusterApiUrl("devnet");
+      const CLUSTER_URL = process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl("devnet");
       const connection = new Connection(CLUSTER_URL, "processed");
 
 

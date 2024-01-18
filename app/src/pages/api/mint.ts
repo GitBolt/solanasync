@@ -35,7 +35,7 @@ export default async function handler(
       await dbConnect()
 
       console.log("Getting Connection")
-      const connection = new anchor.web3.Connection(process.env.RPC_URL as string || "https://solana-devnet.g.alchemy.com/v2/uUAHkqkfrVERwRHXnj8PEixT8792zETN", "processed");
+      const connection = new anchor.web3.Connection(process.env.NEXT_PUBLIC_RPC_URL as string || "https://solana-devnet.g.alchemy.com/v2/uUAHkqkfrVERwRHXnj8PEixT8792zETN", "processed");
 
       const user = new anchor.web3.PublicKey(account);
 

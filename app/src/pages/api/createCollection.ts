@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
 
       const { name, symbol, workshopId, nftImageUri, size, tx } = req.body
+      console.log(req.body)
       if (!name || !symbol || !workshopId || !nftImageUri || !tx) {
         return res.status(400).json({ error: "Name, symbol and workshop id and nft image uri and tx all are required" })
       }
@@ -57,12 +58,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         collectionDetails: null,
       };
 
-<<<<<<< HEAD
-      const collection = await createCollection(connection, payer, collectionMetadataV3, tx);
-=======
-      const collection = await createCollection(connection, payer, collectionMetadataV3, size);
->>>>>>> 5f62d50e1a4140287948a3a6641033bda4c2e65b
-
+      const collection = await createCollection(connection, payer, collectionMetadataV3, tx, size);
+      if (!collection) return
       console.log(collection)
       await Workshop.updateOne(
         { _id: workshopId },
@@ -81,18 +78,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }
       )
-      
-<<<<<<< HEAD
-      res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
-    } catch (e: any) {
-      console.log(e)
-      res.status(500).json({ error: e.toString() });
-=======
+
       return res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
     } catch (error) {
       console.log(error)
       return res.status(500).json({ error: 'Internal Server Error' });
->>>>>>> 5f62d50e1a4140287948a3a6641033bda4c2e65b
     }
   } else {
     res.setHeader('Allow', ['POST']);

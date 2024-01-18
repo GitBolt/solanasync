@@ -105,6 +105,7 @@ export async function createCollection(
   connection: Connection,
   payer: Keypair,
   metadataV3: CreateMetadataAccountArgsV3,
+  txArg: string,
   size: number,
 ) {
   console.log("Creating the collection's mint...");
@@ -210,7 +211,10 @@ export async function createCollection(
   );
 
   try {
+
+    // const tx = Transaction.from(base64.decode(txArg))   
     const tx = new Transaction()
+    tx
       .add(createMetadataIx)
       .add(createMasterEditionIx)
       .add(collectionSizeIX);
@@ -222,11 +226,10 @@ export async function createCollection(
     });
 
     console.log("\nCollection successfully created!", txSignature);
+    return { mint, tokenAccount, metadataAccount, masterEditionAccount, tx };
   } catch (err) {
     console.error("\nFailed to create collection:", err);
-
-
-  return { mint, tokenAccount, metadataAccount, masterEditionAccount, tx };
+  }
 }
 
 
@@ -348,4 +351,3 @@ export async function mintCompressedNFT(
     throw err;
   }
 }
-

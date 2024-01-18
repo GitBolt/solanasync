@@ -71,12 +71,40 @@ const CreateNFTCollectionModal: React.FC = () => {
       message: 'Metadata Uploaded. Processing...',
     });
 
+    const { maxDepth, maxBufferSize } = findLeastDepthPair(size)
+
+    const requiredSpace = getConcurrentMerkleTreeAccountSize(
+      maxDepth,
+      maxBufferSize,
+      maxDepth - 5,
+    );
+    const storageCost = await connection.getMinimumBalanceForRentExemption(
+      requiredSpace,
+    );
+    const feeTransferIx = SystemProgram.transfer({
+      fromPubkey: publicKey,
+      toPubkey: new PublicKey("7sehf2oSyv5r4kir5V2ruzLmU2aihU7fXw1uPAah5Cj"),
+      lamports: storageCost,
+    })
+
+    const tx = new Transaction().add(feeTransferIx)
+
+
+    const { blockhash } = await connection.getLatestBlockhash()
+    tx.recentBlockhash = blockhash
+    tx.feePayer = publicKey
+
+    const signedTx = await signTransaction(tx)
+    const serialized = signedTx.serialize()
+    const base64 = serialized.toString("base64");
+
     const payload = {
       name: collectionName,
       symbol: symbol,
       workshopId: router.query.id,
       nftImageUri: imageUrl,
-      size: size
+      size: size,
+      tx: base64
     };
 
     const res = await fetch("/api/createCollection", {

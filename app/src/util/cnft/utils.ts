@@ -5,6 +5,9 @@ import {
   Transaction,
   sendAndConfirmTransaction,
   TransactionInstruction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+
 } from "@solana/web3.js";
 import { createAccount, createMint, mintTo, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
@@ -12,6 +15,7 @@ import {
   createAllocTreeIx,
   ValidDepthSizePair,
   SPL_NOOP_PROGRAM_ID,
+  getConcurrentMerkleTreeAccountSize,
 } from "@solana/spl-account-compression";
 import {
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
@@ -28,6 +32,7 @@ import {
   createCreateMasterEditionV3Instruction,
   createSetCollectionSizeInstruction,
 } from "@metaplex-foundation/mpl-token-metadata";
+import { base64 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 
 
@@ -101,6 +106,7 @@ export async function createCollection(
   connection: Connection,
   payer: Keypair,
   metadataV3: CreateMetadataAccountArgsV3,
+  txArg: string,
 ) {
   // create and initialize the SPL token mint
   console.log("Creating the collection's mint...");
@@ -127,7 +133,6 @@ export async function createCollection(
   );
   console.log("Token account:", tokenAccount.toBase58());
 
-  // mint 1 token ()
   console.log("Minting 1 token for the collection...");
   const mintSig = await mintTo(
     connection,
@@ -144,7 +149,6 @@ export async function createCollection(
   );
   // console.log(explorerURL({ txSignature: mintSig }));
 
-  // derive the PDA for the metadata account
   const [metadataAccount, _bump] = PublicKey.findProgramAddressSync(
     [Buffer.from("metadata", "utf8"), TOKEN_METADATA_PROGRAM_ID.toBuffer(), mint.toBuffer()],
     TOKEN_METADATA_PROGRAM_ID,
@@ -206,36 +210,23 @@ export async function createCollection(
     },
   );
 
-  try {
-    // construct the transaction with our instructions, making the `payer` the `feePayer`
-    const tx = new Transaction()
-      .add(createMetadataIx)
-      .add(createMasterEditionIx)
-      .add(collectionSizeIX);
-    tx.feePayer = payer.publicKey;
 
-    // send the transaction to the cluster
-    const txSignature = await sendAndConfirmTransaction(connection, tx, [payer], {
-      commitment: "confirmed",
-      skipPreflight: true,
-    });
+  const tx = Transaction.from(base64.decode(txArg))
+    .add(createMetadataIx)
+    .add(createMasterEditionIx)
+    .add(collectionSizeIX)
 
-    console.log("\nCollection successfully created!");
-  } catch (err) {
-    console.error("\nFailed to create collection:", err);
+  const txSignature = await sendAndConfirmTransaction(connection, tx, [payer], {
+    commitment: "confirmed",
+    skipPreflight: true,
+  });
 
-    // log a block explorer link for the failed transaction
+  console.log("\nCollection successfully created! ", txSignature);
 
-    throw err;
-  }
-
-  // return all the accounts
-  return { mint, tokenAccount, metadataAccount, masterEditionAccount };
+  return { mint, tokenAccount, metadataAccount, masterEditionAccount, tx };
 }
 
-/**
- * Mint a single compressed NFTs to any address
- */
+
 export async function mintCompressedNFT(
   connection: Connection,
   payer: Keypair,
@@ -354,3 +345,4 @@ export async function mintCompressedNFT(
     throw err;
   }
 }
+

@@ -93,9 +93,9 @@ const ConnectWalletButton: React.FC = () => {
           </Box>
         }
       >
-        {!connected && <Text fontSize="1.2rem">Connect Wallet</Text>}
+        {!connected && <Text fontSize="1.2rem" fontWeight={400}>Connect Wallet</Text>}
         {connected && wallet && (
-          <Text fontSize="1.2rem">
+          <Text fontSize="1.2rem" fontWeight={400}>
             {truncatedPublicKey(publicKey!.toString(), 4)}
           </Text>
         )}
@@ -135,7 +135,7 @@ const ConnectWalletButton: React.FC = () => {
               key={wallet.adapter.name}
               {...styleConfig.menuItem}
               onClick={async () => {
-                  onConnectWallet(wallet);
+                onConnectWallet(wallet);
               }}
             >
               <Flex gap="1rem" align="center" justify="center">

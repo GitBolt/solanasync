@@ -4,17 +4,19 @@ import { ALL_DEPTH_SIZE_PAIRS, ValidDepthSizePair } from '@solana/spl-account-co
 import { createCollection, createTree } from '@/util/cnft/utils';
 import { CreateMetadataAccountArgsV3 } from '@metaplex-foundation/mpl-token-metadata';
 import { web3 } from '@coral-xyz/anchor';
-import { Workshop } from '@/util/schema';
+import { User, Workshop } from '@/util/schema';
 import { findLeastDepthPair } from '@/util/helper';
 import dbConnect from '@/util/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { name, symbol, workshopId, nftImageUri, size } = req.body
-      if (!name || !symbol || !workshopId || !nftImageUri) {
-        return res.status(400).json({ error: "Name, symbol and workshop id and nft image uri all are required" })
+
+      const { name, symbol, workshopId, nftImageUri, size, tx } = req.body
+      if (!name || !symbol || !workshopId || !nftImageUri || !tx) {
+        return res.status(400).json({ error: "Name, symbol and workshop id and nft image uri and tx all are required" })
       }
+      await dbConnect();
 
       const payer = web3.Keypair.fromSecretKey(
         new Uint8Array(JSON.parse(process.env.GAS_KEY as string))
@@ -22,7 +24,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const CLUSTER_URL = process.env.RPC_URL || clusterApiUrl("devnet");
       const connection = new Connection(CLUSTER_URL, "processed");
-
 
       const { maxDepth, maxBufferSize } = findLeastDepthPair(size)
       console.log(maxDepth, maxBufferSize, size)
@@ -56,10 +57,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         collectionDetails: null,
       };
 
-      const collection = await createCollection(connection, payer, collectionMetadataV3);
+      const collection = await createCollection(connection, payer, collectionMetadataV3, tx);
 
       console.log(collection)
-      await dbConnect();
       await Workshop.updateOne(
         { _id: workshopId },
         {
@@ -79,9 +79,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       )
       
       res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
-    } catch (error) {
-      console.log(error)
-      res.status(500).json({ error: 'Internal Server Error' });
+    } catch (e: any) {
+      console.log(e)
+      res.status(500).json({ error: e.toString() });
     }
   } else {
     res.setHeader('Allow', ['POST']);

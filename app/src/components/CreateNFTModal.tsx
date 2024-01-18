@@ -26,6 +26,11 @@ import { FaUpload, FaQrcode, FaMagic } from 'react-icons/fa';
 import { uploadFile } from '@/util/storage';
 import { useRouter } from 'next/router';
 import { useCustomToast } from '@/hooks/toast';
+import { getConcurrentMerkleTreeAccountSize } from '@solana/spl-account-compression';
+import { Connection, SystemProgram, Transaction } from '@solana/web3.js';
+import { findLeastDepthPair } from '@/util/helper';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@metaplex-foundation/js';
 
 const CreateNFTCollectionModal: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,7 +41,7 @@ const CreateNFTCollectionModal: React.FC = () => {
   const [symbol, setSymbol] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
-
+  const { signTransaction, publicKey } = useWallet()
   const router = useRouter()
 
   const handleFileChange = (event: any) => {
@@ -47,6 +52,7 @@ const CreateNFTCollectionModal: React.FC = () => {
 
 
   const createCollection = async () => {
+    const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL)
     if (!collectionName || !symbol || !imageFile) {
       toast({
         type: 'error',
@@ -58,19 +64,48 @@ const CreateNFTCollectionModal: React.FC = () => {
     setLoading(true);
 
     try {
-      const imageUrl = await uploadFile(imageFile);
-
+      // const imageUrl = await uploadFile(imageFile);
+      const imageUrl = "hey"
       toast({
         type: 'info',
         message: 'Metadata Uploaded. Processing...',
       });
+
+
+      const { maxDepth, maxBufferSize } = findLeastDepthPair(size)
+
+      const requiredSpace = getConcurrentMerkleTreeAccountSize(
+        maxDepth,
+        maxBufferSize,
+        maxDepth - 5,
+      );
+      const storageCost = await connection.getMinimumBalanceForRentExemption(
+        requiredSpace,
+      );
+      const feeTransferIx = SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: new PublicKey("7sehf2oSyv5r4kir5V2ruzLmU2aihU7fXw1uPAah5Cj"),
+        lamports: storageCost,
+      })
+
+      const tx = new Transaction().add(feeTransferIx)
+
+
+      const { blockhash } = await connection.getLatestBlockhash()
+      tx.recentBlockhash = blockhash
+      tx.feePayer = publicKey
+
+      const signedTx = await signTransaction(tx)
+      const serialized = signedTx.serialize()
+      const base64 = serialized.toString("base64");
 
       const payload = {
         name: collectionName,
         symbol: symbol,
         workshopId: router.query.id,
         nftImageUri: imageUrl,
-        size: size
+        size: size,
+        tx: base64
       };
 
       const res = await fetch("/api/createCollection", {
@@ -81,6 +116,13 @@ const CreateNFTCollectionModal: React.FC = () => {
         }
       });
 
+      if (!res.ok) {
+        return toast({
+          type: "error",
+          message: "Something went wrong"
+        })
+      }
+
       if (res.ok) {
         toast({
           type: 'success',
@@ -89,15 +131,16 @@ const CreateNFTCollectionModal: React.FC = () => {
 
         router.push("/workshop/" + router.query.id + "/nft")
       } else {
+        const errorMsg = await res.json()
         toast({
-          title: 'error',
-          message: 'Failed to create NFT Collection',
+          type: 'error',
+          message: errorMsg.error,
         });
       }
     } catch (error) {
       toast({
-        title: 'error',
-        message: 'Network error',
+        type: 'error',
+        message: error.toString(),
       });
     } finally {
       setLoading(false);

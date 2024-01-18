@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         new Uint8Array(JSON.parse(process.env.GAS_KEY as string))
       );
 
-      const CLUSTER_URL = process.env.RPC_URL || clusterApiUrl("devnet");
+      const CLUSTER_URL = process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl("devnet");
       const connection = new Connection(CLUSTER_URL, "processed");
 
       const { maxDepth, maxBufferSize } = findLeastDepthPair(size)
@@ -57,7 +57,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         collectionDetails: null,
       };
 
+<<<<<<< HEAD
       const collection = await createCollection(connection, payer, collectionMetadataV3, tx);
+=======
+      const collection = await createCollection(connection, payer, collectionMetadataV3, size);
+>>>>>>> 5f62d50e1a4140287948a3a6641033bda4c2e65b
 
       console.log(collection)
       await Workshop.updateOne(
@@ -78,13 +82,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       )
       
+<<<<<<< HEAD
       res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
     } catch (e: any) {
       console.log(e)
       res.status(500).json({ error: e.toString() });
+=======
+      return res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({ error: 'Internal Server Error' });
+>>>>>>> 5f62d50e1a4140287948a3a6641033bda4c2e65b
     }
   } else {
     res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

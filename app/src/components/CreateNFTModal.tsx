@@ -63,88 +63,45 @@ const CreateNFTCollectionModal: React.FC = () => {
 
     setLoading(true);
 
-    try {
-      // const imageUrl = await uploadFile(imageFile);
-      const imageUrl = "hey"
+
+    const imageUrl = await uploadFile(imageFile);
+
+    toast({
+      type: 'info',
+      message: 'Metadata Uploaded. Processing...',
+    });
+
+    const payload = {
+      name: collectionName,
+      symbol: symbol,
+      workshopId: router.query.id,
+      nftImageUri: imageUrl,
+      size: size
+    };
+
+    const res = await fetch("/api/createCollection", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (res.ok) {
       toast({
-        type: 'info',
-        message: 'Metadata Uploaded. Processing...',
+        type: 'success',
+        message: 'NFT Collection created successfully',
       });
 
-
-      const { maxDepth, maxBufferSize } = findLeastDepthPair(size)
-
-      const requiredSpace = getConcurrentMerkleTreeAccountSize(
-        maxDepth,
-        maxBufferSize,
-        maxDepth - 5,
-      );
-      const storageCost = await connection.getMinimumBalanceForRentExemption(
-        requiredSpace,
-      );
-      const feeTransferIx = SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: new PublicKey("7sehf2oSyv5r4kir5V2ruzLmU2aihU7fXw1uPAah5Cj"),
-        lamports: storageCost,
-      })
-
-      const tx = new Transaction().add(feeTransferIx)
-
-
-      const { blockhash } = await connection.getLatestBlockhash()
-      tx.recentBlockhash = blockhash
-      tx.feePayer = publicKey
-
-      const signedTx = await signTransaction(tx)
-      const serialized = signedTx.serialize()
-      const base64 = serialized.toString("base64");
-
-      const payload = {
-        name: collectionName,
-        symbol: symbol,
-        workshopId: router.query.id,
-        nftImageUri: imageUrl,
-        size: size,
-        tx: base64
-      };
-
-      const res = await fetch("/api/createCollection", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-
-      if (!res.ok) {
-        return toast({
-          type: "error",
-          message: "Something went wrong"
-        })
-      }
-
-      if (res.ok) {
-        toast({
-          type: 'success',
-          message: 'NFT Collection created successfully',
-        });
-
-        router.push("/workshop/" + router.query.id + "/nft")
-      } else {
-        const errorMsg = await res.json()
-        toast({
-          type: 'error',
-          message: errorMsg.error,
-        });
-      }
-    } catch (error) {
+      router.push("/workshop/" + router.query.id + "/nft")
+    } else {
       toast({
         type: 'error',
-        message: error.toString(),
+        message: 'Failed to create NFT Collection',
       });
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
+
   };
 
   return (

@@ -80,18 +80,17 @@ export async function createTree(
   try {
     const tx = new Transaction().add(allocTreeIx).add(createTreeIx);
     tx.feePayer = payer.publicKey;
-
+    console.log("Sending Tree Creation Tx...")
     const txSignature = await sendAndConfirmTransaction(
       connection,
       tx,
       [treeKeypair, payer],
       {
-        commitment: "confirmed",
-        skipPreflight: true,
+        commitment: "processed",
       },
     );
 
-    console.log("\nMerkle tree created successfully!");
+    console.log("\nMerkle tree created successfully!", txSignature);
     // return useful info
     return { treeAuthority, treeAddress: treeKeypair.publicKey };
   } catch (err: any) {
@@ -106,9 +105,8 @@ export async function createCollection(
   connection: Connection,
   payer: Keypair,
   metadataV3: CreateMetadataAccountArgsV3,
-  txArg: string,
+  size: number,
 ) {
-  // create and initialize the SPL token mint
   console.log("Creating the collection's mint...");
   const mint = await createMint(
     connection,
@@ -119,17 +117,19 @@ export async function createCollection(
     payer.publicKey,
     // decimals - use `0` for NFTs since they are non-fungible
     0,
+    undefined,
+    { commitment: "processed" }
   );
   console.log("Mint address:", mint.toBase58());
 
-  // create the token account
   console.log("Creating a token account...");
   const tokenAccount = await createAccount(
     connection,
     payer,
     mint,
     payer.publicKey,
-    // undefined, undefined,
+    undefined,
+    { commitment: "processed" }
   );
   console.log("Token account:", tokenAccount.toBase58());
 
@@ -147,7 +147,7 @@ export async function createCollection(
     undefined,
     TOKEN_PROGRAM_ID,
   );
-  // console.log(explorerURL({ txSignature: mintSig }));
+  console.log("Mint done: ", mintSig)
 
   const [metadataAccount, _bump] = PublicKey.findProgramAddressSync(
     [Buffer.from("metadata", "utf8"), TOKEN_METADATA_PROGRAM_ID.toBuffer(), mint.toBuffer()],
@@ -169,7 +169,6 @@ export async function createCollection(
     },
   );
 
-  // derive the PDA for the metadata account
   const [masterEditionAccount, _bump2] = PublicKey.findProgramAddressSync(
     [
       Buffer.from("metadata", "utf8"),
@@ -206,22 +205,26 @@ export async function createCollection(
       collectionMint: mint,
     },
     {
-      setCollectionSizeArgs: { size: 50 },
+      setCollectionSizeArgs: { size },
     },
   );
 
+  try {
+    const tx = new Transaction()
+      .add(createMetadataIx)
+      .add(createMasterEditionIx)
+      .add(collectionSizeIX);
+    tx.feePayer = payer.publicKey;
 
-  const tx = Transaction.from(base64.decode(txArg))
-    .add(createMetadataIx)
-    .add(createMasterEditionIx)
-    .add(collectionSizeIX)
+    console.log("Sending TX")
+    const txSignature = await sendAndConfirmTransaction(connection, tx, [payer], {
+      commitment: "processed",
+    });
 
-  const txSignature = await sendAndConfirmTransaction(connection, tx, [payer], {
-    commitment: "confirmed",
-    skipPreflight: true,
-  });
+    console.log("\nCollection successfully created!", txSignature);
+  } catch (err) {
+    console.error("\nFailed to create collection:", err);
 
-  console.log("\nCollection successfully created! ", txSignature);
 
   return { mint, tokenAccount, metadataAccount, masterEditionAccount, tx };
 }

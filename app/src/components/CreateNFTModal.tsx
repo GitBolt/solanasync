@@ -90,7 +90,7 @@ const CreateNFTCollectionModal: React.FC = () => {
       router.push("/workshop/" + router.query.id + "/nft")
     } else {
       toast({
-        title: 'error',
+        type: 'error',
         message: 'Failed to create NFT Collection',
       });
     }

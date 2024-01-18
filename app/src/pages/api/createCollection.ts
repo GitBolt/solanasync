@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         collectionDetails: null,
       };
 
-      const collection = await createCollection(connection, payer, collectionMetadataV3);
+      const collection = await createCollection(connection, payer, collectionMetadataV3, size);
 
       console.log(collection)
       await dbConnect();
@@ -78,13 +78,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       )
       
-      res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
+      return res.status(200).json({ message: 'Collection Created', mint: collection.mint.toBase58() });
     } catch (error) {
       console.log(error)
-      res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
     res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

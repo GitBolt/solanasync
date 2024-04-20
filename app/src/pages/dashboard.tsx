@@ -7,14 +7,16 @@ import { useRouter } from 'next/router';
 
 type Props = {
   title: string,
-  date: string,
+  start: string,
+  end: string,
+  capacity: number,
   location: string,
   id: string,
   nft: boolean,
   quiz: boolean,
 }
 
-const WorkshopItem = ({ title, date, location, id, nft, quiz }: Props) => (
+const WorkshopItem = ({ title, start, end, capacity, location, id, nft, quiz }: Props) => (
   <LinkBox
     w="100%"
     p={4}
@@ -32,7 +34,7 @@ const WorkshopItem = ({ title, date, location, id, nft, quiz }: Props) => (
     </LinkOverlay>
     <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center" mb={1}>
       <Icon as={FaCalendarAlt} color="#838DE9" mr={2} />
-      <Text fontSize="1.3rem" color="#7C7E97">{new Date(date).toLocaleString()}</Text>
+      <Text fontSize="1.3rem" color="#7C7E97">Start: {new Date(start).toLocaleString()}</Text>
     </Flex>
     <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center">
       <Icon as={FaMapMarkerAlt} color="#838DE9" mr={2} />
@@ -72,10 +74,10 @@ const WorkshopLandingPage = () => {
         const response = await fetch(`/api/workshops/${publicKey}`);
         const data = await response.json();
         const now = new Date();
-        const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.start).getTime() - new Date(b.start).getTime());
 
-        const upcoming = sortedWorkshops.filter((workshop: any) => new Date(workshop.date) >= now);
-        const past = sortedWorkshops.filter((workshop: any) => new Date(workshop.date) < now);
+        const upcoming = sortedWorkshops.filter((workshop: any) => new Date(workshop.start) >= now);
+        const past = sortedWorkshops.filter((workshop: any) => new Date(workshop.start) < now);
 
         setUpcomingWorkshops(upcoming);
         setPastWorkshops(past);
@@ -92,7 +94,9 @@ const WorkshopLandingPage = () => {
       {workshops && workshops.length ? workshops.map((workshop: any) => (
         <WorkshopItem
           title={workshop.name}
-          date={workshop.date}
+          start={workshop.start}
+          end={workshop.end}
+          capacity={workshop.capacity}
           location={workshop.location}
           id={workshop._id}
           key={workshop._id}

@@ -4,3 +4,5 @@ test-ledger
 .next
 .next/cache
 cache
+.env.local
+.env

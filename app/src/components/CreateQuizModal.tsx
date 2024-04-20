@@ -126,7 +126,8 @@ const CreateQuizModal = ({ setUpdateState }: Props) => {
         h="5rem"
         fontSize="2rem"
         leftIcon={<Icon as={FaQuestionCircle} />}
-        colorScheme="voilet">
+        colorScheme="voilet"
+      >
         Create Quiz
       </Button>
 

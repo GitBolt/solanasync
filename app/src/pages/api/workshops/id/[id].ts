@@ -1,10 +1,11 @@
 import dbConnect from '@/util/db';
-import { Workshop } from '@/util/schema';
+import { User, Workshop } from '@/util/schema';
 import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Data = {
-  workshops?: any[];
+  workshopData?: {};
+  host?: {};
   message?: string;
 };
 
@@ -26,15 +27,14 @@ export default async function handler(
   }
 
   try {
-    await dbConnect();
 
-    const workshop = await Workshop.findOne({ _id: id});
-
-    if (!workshop) {
+    const workshop = await Workshop.findOne({ _id: id });
+    const user = await User.findOne({ _id: workshop.ownerId })
+    if (!workshop || !user) {
       return res.status(404).json({ message: 'Workshop not found' });
     }
 
-    res.status(200).json(workshop);
+    res.status(200).json({ workshopData: workshop, host: user });
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Internal Server Error' });

@@ -6,35 +6,39 @@ import {
   Heading,
   SimpleGrid,
   Text,
-  useColorModeValue,
   VStack
 } from '@chakra-ui/react';
-import { FiMonitor, FiBookOpen, FiActivity, FiCamera, FiPaperclip, FiList } from 'react-icons/fi';
+import { FiActivity, FiCamera, FiList } from 'react-icons/fi';
 import { Navbar } from '@/components/Navbar';
 import { useRouter } from 'next/router';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { DefaultHead } from '@/components/DefaultHead';
 
 const WorkshopLandingPage = () => {
-  const [workshopsExist, setWorkshopsExist] = useState<boolean>(false)
+  const [userExists, setUserExists] = useState<boolean>(false)
   const { publicKey } = useWallet()
   const router = useRouter()
 
   useEffect(() => {
+
     const fetchData = async () => {
-      setWorkshopsExist(false)
-      if (publicKey) {
-        const workshops = await fetch("/workshops/" + publicKey)
-        const res = await workshops.json()
-        if (res || res.length) {
-          setWorkshopsExist(true)
-        } else {
-          setWorkshopsExist(false)
+      setUserExists(false);
+      if (!publicKey) return
+      try {
+        const res = await fetch("/api/user/" + publicKey);
+        if (!res.ok) setUserExists(false)
+        if (res.ok) {
+          setUserExists(true)
         }
+      } catch (error) {
+        console.error("Error fetching workshops:", error);
       }
-      fetchData()
-    }
-  }, [publicKey])
+    };
+
+    fetchData();
+
+  }, [publicKey]);
+
 
   return (
     <>
@@ -61,11 +65,11 @@ const WorkshopLandingPage = () => {
             fontSize="2rem"
             padding="2.2rem 3rem"
             mt="2rem"
-            onClick={() => router.push(workshopsExist ? "/new" : "/dashboard")}
+            onClick={() => router.push(userExists ? "/dashboard" : "/new")}
             zIndex={100}
             _hover={{ background: "#9A91FF" }}
           >
-            {workshopsExist ? 'New Workshop' : 'Go to Dashboard'}
+            {userExists ? 'Go to Dashboard' : 'Get Started'}
           </Button>
         </VStack>
 

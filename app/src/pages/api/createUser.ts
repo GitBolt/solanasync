@@ -9,14 +9,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   dbConnect()
   if (req.method === 'POST') {
     try {
-      const { publicKey } = req.body;
-      if (!publicKey) {
-        return res.status(400).json({ message: 'Public Key is required' });
-      }
-      const newUser = new User({ publicKey });
+      const { bio, instagram, twitter, name, email, publicKey } = req.body;
+      const newUser = new User({ email, publicKey, bio, instagram, twitter, name });
       await newUser.save();
-
-      res.status(200).json({ message: 'Created User' });
+     
+      return res.status(200).json(newUser);
     } catch (error) {
       console.log(error)
       res.status(500).json({ error: 'Internal Server Error' });

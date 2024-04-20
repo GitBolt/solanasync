@@ -24,6 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       );
 
       const CLUSTER_URL = process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl("devnet");
+      console.log(CLUSTER_URL)
       const connection = new Connection(CLUSTER_URL, "processed");
 
       const { maxDepth, maxBufferSize } = findLeastDepthPair(size)

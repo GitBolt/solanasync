@@ -87,7 +87,7 @@ const LinkInput = ({ id, label, link, onUpdate, isEditing, setIsEditing }: any) 
             <Button
               fontSize="1.8rem"
               borderRadius="1.2rem"
-              w="60%"
+              w="70%"
               height="4.5rem"
               colorScheme={label == "Presentation" ? "orange" : "telegram"}
               leftIcon={label == "Presentation" ? <AiFillFilePpt /> : <FaWpforms />}

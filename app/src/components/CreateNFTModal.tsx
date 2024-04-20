@@ -81,6 +81,7 @@ const CreateNFTCollectionModal: React.FC = () => {
     const storageCost = await connection.getMinimumBalanceForRentExemption(
       requiredSpace,
     );
+    console.log("Storage Cost: ", storageCost)
     const feeTransferIx = SystemProgram.transfer({
       fromPubkey: publicKey,
       toPubkey: new PublicKey("7sehf2oSyv5r4kir5V2ruzLmU2aihU7fXw1uPAah5Cj"),

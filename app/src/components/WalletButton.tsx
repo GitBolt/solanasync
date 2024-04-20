@@ -44,7 +44,7 @@ const styleConfig = {
   iconBox: {
     height: "1.5rem",
     width: "1.5rem",
-    iconColor: "#5F54D8"
+    iconcolor: "#5F54D8"
   },
 };
 
@@ -104,7 +104,7 @@ const ConnectWalletButton: React.FC = () => {
       {connected && (
         <MenuList {...styleConfig.menuList}>
           <MenuItem {...styleConfig.menuItem} onClick={copyPublicKey}>
-            <FiCopy color={styleConfig.iconBox.iconColor} />
+            <FiCopy color={styleConfig.iconBox.iconcolor} />
             Copy Address
           </MenuItem>
 
@@ -122,7 +122,7 @@ const ConnectWalletButton: React.FC = () => {
               }
             }}
           >
-            <FiDelete color={styleConfig.iconBox.iconColor} />
+            <FiDelete color={styleConfig.iconBox.iconcolor} />
             Disconnect
           </MenuItem>
         </MenuList>

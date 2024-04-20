@@ -86,7 +86,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
-            <SliderThumb fontSize='sm' fontWeight={700} boxSize='2rem' children={details.capacity} />
+            <SliderThumb fontSize='sm' fontWeight={700} boxSize='2rem'>{details.capacity}</SliderThumb>
           </Slider>
         </Flex>
 

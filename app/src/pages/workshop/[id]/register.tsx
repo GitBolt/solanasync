@@ -97,7 +97,7 @@ const RegisterPage = () => {
         <Flex justify="space-between" w="70%" gap="2rem">
 
           <Box w="50%" padding="3rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
-            <Text fontWeight="700" w="100%" textAlign="start" fontSize="4rem" color="white">
+            <Text fontWeight="700" w="100%" textAlign="start" fontSize="3.4rem" color="white">
               {workshop.name}
             </Text>
 

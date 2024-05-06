@@ -60,8 +60,8 @@ const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.name || !formData.phoneNumber) {
-      return toast({ "type": "error", message: "Name, email, phone number are required" })
+    if (!formData.email || !formData.name ) {
+      return toast({ "type": "error", message: "Name and email are required" })
     }
     try {
       const response = await fetch('/api/register', {
@@ -179,7 +179,7 @@ const RegisterPage = () => {
                   color="white"
                   value={formData.email} onChange={handleChange} />
               </FormControl>
-              <FormControl id="phoneNumber" mb={4}>
+              {/* <FormControl id="phoneNumber" mb={4}>
                 <FormLabel color="white">Phone Number</FormLabel>
                 <Input type="text" name="phoneNumber"
                   bg="#1F1F29"
@@ -188,7 +188,7 @@ const RegisterPage = () => {
                   fontSize="1.2rem"
                   color="white"
                   value={formData.phoneNumber} onChange={handleChange} />
-              </FormControl>
+              </FormControl> */}
               <FormControl id="goals" mb={4}>
                 <FormLabel color="white">Goals</FormLabel>
                 <Input type="text" name="goals"

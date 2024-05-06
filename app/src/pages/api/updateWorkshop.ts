@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     try {
-      const { workshopId, presentation, feedback } = req.body;
+      const { workshopId, presentation, feedback, meet } = req.body;
 
       if (!workshopId) {
         return res.status(400).json({ message: 'workshopId is required' });
@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const updateData: any = {};
       if (presentation !== undefined) updateData['links.presentation'] = presentation;
       if (feedback !== undefined) updateData['links.feedback'] = feedback;
+      if (meet !== undefined) updateData['links.meet'] = meet;
       
       const w = await Workshop.updateOne(
         { _id: workshopId },

@@ -3,7 +3,8 @@ import { Box, Heading, Input, Button, IconButton, Tag, useToast, Flex } from '@c
 import { EditIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { AiFillFilePpt } from "react-icons/ai";
-import { FaWpforms } from "react-icons/fa6";
+import { FaMicrophoneLines, FaWpforms } from "react-icons/fa6";
+import { FaMeetup } from 'react-icons/fa';
 
 const LinkInput = ({ id, label, link, onUpdate, isEditing, setIsEditing }: any) => {
   const [currentLink, setCurrentLink] = useState(link);
@@ -18,7 +19,7 @@ const LinkInput = ({ id, label, link, onUpdate, isEditing, setIsEditing }: any) 
       const response = await fetch(`/api/updateWorkshop`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ presentation: label == "Presentation" ? currentLink : undefined, feedback: label == "Feedback Form" ? currentLink : undefined, workshopId: id }),
+        body: JSON.stringify({ presentation: label == "Presentation" ? currentLink : undefined, feedback: label == "Feedback Form" ? currentLink : undefined, meet: label == "Online Call Link" ? currentLink : undefined, workshopId: id }),
       });
       if (!response.ok) throw new Error('Network response was not ok');
 
@@ -85,12 +86,12 @@ const LinkInput = ({ id, label, link, onUpdate, isEditing, setIsEditing }: any) 
             </Flex>
           ) : (
             <Button
-              fontSize="1.8rem"
+              fontSize="1.6rem"
               borderRadius="1.2rem"
-              w="70%"
-              height="4.5rem"
-              colorScheme={label == "Presentation" ? "orange" : "telegram"}
-              leftIcon={label == "Presentation" ? <AiFillFilePpt /> : <FaWpforms />}
+              w="80%"
+              height="4rem"
+              colorScheme={label == "Presentation" ? "orange" : label == "Feedback Form" ? 'whatsapp' : 'telegram'}
+              leftIcon={label == "Presentation" ? <AiFillFilePpt /> : label == "Feedback Form" ? <FaWpforms /> : <FaMicrophoneLines />}
               onClick={() => setIsEditing(true)}
             >
               {`Add ${label}`}
@@ -109,14 +110,17 @@ const LinksComponent = ({ workshop }: Props) => {
 
   const [presentationLink, setPresentationLink] = useState(workshop.links && workshop.links.presentation ? workshop.links.presentation : '');
   const [feedbackLink, setFeedbackLink] = useState(workshop.links && workshop.links.feedback ? workshop.links.feedback : '');
+  const [meetLink, setMeetLink] = useState(workshop.links && workshop.links.meet ? workshop.links.meet : '');
   const [isEditingPresentation, setIsEditingPresentation] = useState(false);
   const [isEditingFeedback, setIsEditingFeedback] = useState(false);
+  const [isEditingMeet, setIsEditingMeet] = useState(false);
   const router = useRouter()
 
 
   useEffect(() => {
     setPresentationLink(workshop.links && workshop.links.presentation ? workshop.links.presentation : '')
     setFeedbackLink(workshop.links && workshop.links.feedback ? workshop.links.feedback : '')
+    setMeetLink(workshop.links && workshop.links.meet ? workshop.links.meet : '')
   }, [workshop]);
 
   return (
@@ -137,6 +141,15 @@ const LinksComponent = ({ workshop }: Props) => {
         onUpdate={setFeedbackLink}
         isEditing={isEditingFeedback}
         setIsEditing={setIsEditingFeedback}
+      />
+
+      <LinkInput
+        id={router.query.id}
+        label="Online Call Link"
+        link={meetLink}
+        onUpdate={setMeetLink}
+        isEditing={isEditingMeet}
+        setIsEditing={setIsEditingMeet}
       />
     </Flex>
   );

@@ -60,7 +60,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.name ) {
+    if (!formData.email || !formData.name) {
       return toast({ "type": "error", message: "Name and email are required" })
     }
     try {
@@ -79,6 +79,21 @@ const RegisterPage = () => {
         console.log('User registered successfully');
         toast({ type: "success", message: "Succesfully registered for workshop" })
         setSuccess(true)
+        await fetch("/api/mail", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            title: workshop.name,
+            start: workshop.start,
+            end: workshop.end,
+            capacity: workshop.capacity,
+            meet: workshop.links.meet,
+            description: workshop.description
+          })
+        })
       } else {
         console.error('Error registering user:', response.statusText);
         toast({ type: "error", message: "Error registering for workshop" })
@@ -97,7 +112,7 @@ const RegisterPage = () => {
         <Flex justify="space-between" w="70%" gap="2rem">
 
           <Box w="50%" padding="3rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
-            <Text fontWeight="700" w="100%" textAlign="start" fontSize="3.4rem" color="white">
+            <Text fontWeight="700" w="100%" textAlign="start" fontSize="3.2rem" color="white">
               {workshop.name}
             </Text>
 
@@ -212,7 +227,7 @@ const RegisterPage = () => {
               </Button>
             </form>
           </Box> :
-            <Text color="white" textAlign="center" fontSize="3rem">You are in! Feel free to close the tab now.</Text>
+            <Text color="white" textAlign="center" fontSize="3rem" width="50%">You are in! Feel free to close the tab now.</Text>
           }
         </Flex >
       </Flex >

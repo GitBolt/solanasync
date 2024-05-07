@@ -53,10 +53,10 @@ const WorkshopLandingPage = () => {
       >
         <VStack textAlign="center">
           <Heading as="h1" fontWeight="100" fontSize="5.3rem" maxW="80%" color="white">
-            <span style={{ color: "#7B70FF" }}>Supercharge</span> Your Solana Workshops
+            <span style={{ color: "#7B70FF" }}>Supercharge</span> Your Educational Workshops
           </Heading>
           <Text fontSize="2rem" color="#9694B6">
-            Conduct your next IRL Solana workshop with ease while making it more fun
+            Conduct your next workshop with ease while making it more fun and more managable
           </Text>
           <Button
             background="#5F54D8"

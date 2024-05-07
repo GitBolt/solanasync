@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  sgMail.setApiKey(process.env.NEXT_PUBLIC_SENDGRID as string);
+  sgMail.setApiKey("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");
   if (req.method === 'POST') {
     try {
       const { email, title, meet, capacity, end, start, description } = req.body

@@ -67,6 +67,7 @@ const WorkshopLandingPage = () => {
   const { publicKey } = useWallet();
   const router = useRouter();
 
+  
   useEffect(() => {
     const fetchWorkshops = async () => {
       if (!publicKey) return;

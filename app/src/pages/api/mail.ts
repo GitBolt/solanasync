@@ -1,9 +1,9 @@
 import sgMail from '@sendgrid/mail';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-sgMail.setApiKey(process.env.SENDGRID_KEY as string);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  sgMail.setApiKey(process.env.SENDGRID_KEY as string);
   if (req.method === 'POST') {
     try {
       const { email, title, meet, capacity, end, start, description } = req.body

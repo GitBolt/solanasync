@@ -77,8 +77,8 @@ const WorkshopLandingPage = () => {
         const now = new Date();
         const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.start).getTime() - new Date(b.start).getTime());
 
-        const upcoming = sortedWorkshops.filter((workshop: any) => new Date(workshop.start) >= now);
-        const past = sortedWorkshops.filter((workshop: any) => new Date(workshop.start) < now);
+        const upcoming = sortedWorkshops.filter((workshop: any) => new Date(workshop.end) >= now);
+        const past = sortedWorkshops.filter((workshop: any) => new Date(workshop.end) < now);
 
         setUpcomingWorkshops(upcoming);
         setPastWorkshops(past);

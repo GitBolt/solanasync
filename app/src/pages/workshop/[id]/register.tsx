@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Heading, Text, Icon, Center, Button, FormControl, FormLabel, Input, Divider } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, Icon, Center, Button, FormControl, FormLabel, Input, Divider, useMediaQuery } from '@chakra-ui/react';
 import { FaArrowAltCircleRight, FaArrowLeft, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { Navbar } from '@/components/Navbar';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -35,6 +35,7 @@ const RegisterPage = () => {
     });
   };
 
+  const [check1240] = useMediaQuery('(max-width: 1240px)')
 
   useEffect(() => {
     const fetchWorkshop = async () => {
@@ -108,31 +109,32 @@ const RegisterPage = () => {
   return (
     <>
       <Navbar />
-      <Flex direction="column" align="center" justify="center" p={12} bg="#0E0E10">
-        <Flex justify="space-between" w="70%" gap="2rem">
+      <Flex align="center" justify="center" alignItems="center" justifyContent="center" mt="4rem">
+        <Flex direction={check1240 ? 'column' : 'row'} w="1200px" alignItems="center" justifyContent="center" gap="1rem">
 
-          <Box w="50%" padding="3rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
+          <Box w={check1240 ? "80%" : "50%"} padding="3rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
             <Text fontWeight="700" w="100%" textAlign="start" fontSize="3.2rem" color="white">
               {workshop.name}
             </Text>
 
             <Text textAlign="start" color="gray.400" fontSize="2rem">{workshop.description}</Text>
             <Text fontSize="1.4rem" color="#818599" mt={4}>
-              Starts on: {formatDate(workshop.start)} {' '} {formatTime(workshop.start)}
+              Starts on: <span style={{ color: 'white' }}>{formatDate(workshop.start)} {' '} {formatTime(workshop.start)}</span>
             </Text>
 
             <Text fontSize="1.4rem" color="#818599" mt={4}>
-              Ends on: {formatDate(workshop.end)} {' '} {formatTime(workshop.end)}
+              Ends on: <span style={{ color: 'white' }}>{formatDate(workshop.end)} {' '} {formatTime(workshop.end)}</span>
             </Text>
 
             <Text fontSize="1.4rem" color="#818599" mt={2}>
-              Location: {workshop.location}
+              Location: <span style={{ color: 'white' }}>{workshop.location}</span>
             </Text>
 
             <Divider bg="#818599" flex="1" mt="2rem" mb="0.8rem" border="1px solid #2f314f" />
             <Text fontSize="1.2rem" color="#818599">
               Hosted By
             </Text>
+
             <Flex align="center" justify="space-between" mt="0.2rem">
               <Text fontSize="1.4rem" color="white" >
                 {host.name}
@@ -158,7 +160,7 @@ const RegisterPage = () => {
 
 
 
-          {!success ? <Box w="50%" p={12}>
+          {new Date(workshop.end) > new Date() ? !success ? <Box w={check1240 ? '80%' : "50%"} p={12}>
             <Center>
               <Heading as="h1" fontSize="3xl" color="white" mb={8}>
                 Register
@@ -228,7 +230,10 @@ const RegisterPage = () => {
             </form>
           </Box> :
             <Text color="white" textAlign="center" fontSize="3rem" width="50%">You are in! Feel free to close the tab now.</Text>
-          }
+            : <Box mb="2rem" w={check1240 ? "80%" : '50%'}>
+              <p style={{ fontSize: "2.5rem", color: '#cacafb', fontWeight: "700", textAlign: 'center' }}>The workshop is over. Thanks for joining!</p>
+
+            </Box>}
         </Flex >
       </Flex >
 

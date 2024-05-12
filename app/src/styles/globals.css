@@ -95,3 +95,9 @@ a {
 .react-datetime-picker__inputGroup__input:invalid {
   background-color: transparent !important;
 }
+
+@media screen and (max-width: 1300px) {
+  body, html {
+    font-size: 80%;
+  }
+}

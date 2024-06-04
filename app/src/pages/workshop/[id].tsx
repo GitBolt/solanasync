@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Flex, Heading, Text, Icon, VStack, LinkBox, LinkOverlay, Center, Divider } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Text, Icon, VStack, LinkBox, LinkOverlay, Center, Divider, useMediaQuery } from '@chakra-ui/react';
 import { FaCalendarAlt, FaEdit, FaMapMarkerAlt, FaLink, FaQuestionCircle, FaQrcode, FaArrowLeft, FaTicketAlt, FaExternalLinkAlt } from 'react-icons/fa';
 import { Navbar } from '@/components/Navbar';
 import CreateQuizModal from '@/components/CreateQuizModal';
@@ -17,6 +17,7 @@ const WorkshopPage = () => {
   const router = useRouter()
   const [workshop, setWorkshop] = useState<any>({})
   const [updateState, setUpdateState] = useState<number>(+new Date())
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)')
 
   useEffect(() => {
 
@@ -52,8 +53,9 @@ const WorkshopPage = () => {
   return (
     <>
       <Navbar />
-      {publicKey ? <Flex direction="column" align="center" justify="center" p={12} bg="#0E0E10">
-        <Box w="60%">
+      {publicKey ?
+       <Flex direction="column" align="center" justify="center" p={isLargerThan600 ? 12 : 5} bg="#0E0E10">
+        <Box w={isLargerThan600 ? "60%" : "90%"}>
           <Button
             alignSelf="start"
             leftIcon={<FaArrowLeft />}
@@ -68,13 +70,12 @@ const WorkshopPage = () => {
           </Button>
         </Box>
 
-        <Flex justify="space-between" w="60%">
-          <Box w="73%" padding="2rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
+        <Flex justify="space-between" w={isLargerThan600 ? "60%" : "90%"} flexFlow={isLargerThan600 ? "row" :'column'}>
+          <Box w={isLargerThan600 ? "73%" : '100%'} padding="2rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
             <Flex flexFlow="column" gap="1rem">
               <Heading as="h1" fontWeight="700" fontSize="3rem" color="white" textAlign="start">{workshop.name}</Heading>
 
               <Flex justify="space-between" w="100%">
-
 
                 <Flex flexFlow="column" gap="0.5rem">
                   <Flex align="center" gap="0.5rem">
@@ -106,7 +107,7 @@ const WorkshopPage = () => {
             </Flex>
           </Box>
 
-          <Flex flexFlow="column" gap="2rem" justify="center" alignItems="center" w="25%" padding="2rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
+          <Flex flexFlow="column" gap="2rem" justify="center" alignItems="center" w={isLargerThan600 ? "25%" : '100%'} padding="2rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
             
             <Flex align="center">
               <Icon as={FaExternalLinkAlt} boxSize={5} color="blue.500" mr={2} />
@@ -129,8 +130,8 @@ const WorkshopPage = () => {
 
 
 
-        <Flex justify="space-between" w="60%">
-          <Box w="50%" padding="2rem" bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27" mr={4}>
+        <Flex justify="space-between" w={isLargerThan600 ? "60%" : "90%"} flexFlow={isLargerThan600 ? 'row' :'column'}>
+          <Box w={isLargerThan600 ? "50%" : '100%'} padding="2rem" bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27" mr={4}>
             <Heading color="#505161" mb={4}>Features</Heading>
             <Flex justify="space-evenly" gap="2rem" align="center" flexFlow="column">
               {workshop && workshop.quizMetadata ?
@@ -156,7 +157,7 @@ const WorkshopPage = () => {
             </Flex>
           </Box>
 
-          <Box w="50%" p={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
+          <Box w={isLargerThan600 ? "50%" : '100%'} p={4} mt={'1rem'} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
             {workshop ? <LinksComponent workshop={workshop} /> : null}
           </Box>
         </Flex>

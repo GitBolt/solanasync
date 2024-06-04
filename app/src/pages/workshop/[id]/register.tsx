@@ -76,6 +76,7 @@ const RegisterPage = () => {
         }),
       });
 
+      console.log("Register server response: ", response)
       if (response.ok) {
         console.log('User registered successfully');
         toast({ type: "success", message: "Succesfully registered for workshop" })
@@ -91,7 +92,7 @@ const RegisterPage = () => {
             start: workshop.start,
             end: workshop.end,
             capacity: workshop.capacity,
-            meet: workshop.links.meet,
+            meet: workshop.links ? workshop.links.meet : "",
             description: workshop.description
           })
         })
@@ -131,7 +132,7 @@ const RegisterPage = () => {
             </Text>
 
             <Divider bg="#818599" flex="1" mt="2rem" mb="0.8rem" border="1px solid #2f314f" />
-            <Text fontSize="1.2rem" color="#818599">
+            <Text fontSize="1.5rem" color="#818599">
               Hosted By
             </Text>
 
@@ -160,9 +161,9 @@ const RegisterPage = () => {
 
 
 
-          {new Date(workshop.end) > new Date() ? !success ? <Box w={check1240 ? '80%' : "50%"} p={12}>
+          {new Date(workshop.end) > new Date() ? !success ? <Box w={check1240 ? '80%' : "50%"} p={check1240 ? 2 : 12}>
             <Center>
-              <Heading as="h1" fontSize="3xl" color="white" mb={8}>
+              <Heading as="h1" fontSize="3rem" color="white" mb={8}>
                 Register
               </Heading>
             </Center>
@@ -181,7 +182,7 @@ const RegisterPage = () => {
                   bg="#1F1F29"
                   borderColor="#34394D"
                   placeholder='Enter your name'
-                  fontSize="1.2rem"
+                  fontSize="1.5rem"
                   color="white"
 
                   value={formData.name} onChange={handleChange} />
@@ -192,7 +193,7 @@ const RegisterPage = () => {
                   bg="#1F1F29"
                   borderColor="#34394D"
                   placeholder='Enter your email'
-                  fontSize="1.2rem"
+                  fontSize="1.5rem"
                   color="white"
                   value={formData.email} onChange={handleChange} />
               </FormControl>
@@ -202,7 +203,7 @@ const RegisterPage = () => {
                   bg="#1F1F29"
                   borderColor="#34394D"
                   placeholder='Enter your phone number'
-                  fontSize="1.2rem"
+                  fontSize="1.5rem"
                   color="white"
                   value={formData.phoneNumber} onChange={handleChange} />
               </FormControl> */}
@@ -212,7 +213,7 @@ const RegisterPage = () => {
                   bg="#1F1F29"
                   borderColor="#34394D"
                   placeholder='What is your goal with attending this workshop?'
-                  fontSize="1.2rem"
+                  fontSize="1.5rem"
                   color="white" value={formData.goals} onChange={handleChange} />
 
               </FormControl>

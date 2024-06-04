@@ -9,13 +9,15 @@ export const Navbar = () => {
 
       <Link href="/">
         <LinkBox fontSize="1.2rem" color="blue.400" fontWeight={600} borderRadius="1rem">
-          <img src='/icon.png' style={{ height: "50px", width: "120px" }} />
+          <img src='/icon.png'
+           style={{ height: "50px", width: "120px", objectFit:'cover' }} />
         </LinkBox>
       </Link>
 
       <Flex gap="2rem" align="center">
         <a style={{fontSize:"1.2rem", fontWeight:400, color:"#c2cdd9"}} href="https://github.com/solana-workshops" target="_blank">Resources</a>
-        <Link href="/guide"><Text fontSize="1.2rem" color="gray.300" fontWeight={400} >Guide</Text></Link>
+        <Link href="/guide">
+          <Text fontSize="1.2rem" color="gray.300" fontWeight={400} >Guide</Text></Link>
         <Wallets />
       </Flex>
     </Flex>

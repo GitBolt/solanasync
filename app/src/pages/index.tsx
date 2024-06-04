@@ -6,7 +6,8 @@ import {
   Heading,
   SimpleGrid,
   Text,
-  VStack
+  VStack,
+  useMediaQuery
 } from '@chakra-ui/react';
 import { FiActivity, FiCamera, FiList } from 'react-icons/fi';
 import { Navbar } from '@/components/Navbar';
@@ -18,6 +19,8 @@ const WorkshopLandingPage = () => {
   const [userExists, setUserExists] = useState<boolean>(false)
   const { publicKey } = useWallet()
   const router = useRouter()
+
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)')
 
   useEffect(() => {
 
@@ -52,10 +55,10 @@ const WorkshopLandingPage = () => {
         bg="#0E0E10"
       >
         <VStack textAlign="center">
-          <Heading as="h1" fontWeight="100" fontSize="5.3rem" maxW="80%" color="white">
+          <Heading as="h1" fontWeight="100" fontSize={isLargerThan600 ? '5.3rem' : '2rem'} maxW="80%" color="white">
             <span style={{ color: "#7B70FF" }}>Supercharge</span> Your Educational Workshops
           </Heading>
-          <Text fontSize="2rem" color="#9694B6">
+          <Text fontSize={isLargerThan600 ? '2rem' :'1.5rem'} color="#9694B6">
             Conduct your next workshop with ease while making it more fun and more managable
           </Text>
           <Button

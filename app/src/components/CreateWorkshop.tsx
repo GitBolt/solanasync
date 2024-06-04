@@ -16,7 +16,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
       </Text>
 
       <Box w="100%">
-        <Text fontSize="1.2rem" color="#838DE9" fontWeight="500"  textAlign="start">Title</Text>
+        <Text fontSize="1.5rem" color="#838DE9" fontWeight="500"  textAlign="start">Title</Text>
         <Input
           onChange={(e) => setDetails({ ...details, title: e.target.value })}
           variant="flushed"
@@ -28,7 +28,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
       </Box>
 
       <Box w="100%">
-        <Text fontSize="1.2rem" color="#838DE9" fontWeight="500"  textAlign="start">Location</Text>
+        <Text fontSize="1.5rem" color="#838DE9" fontWeight="500"  textAlign="start">Location</Text>
         <Input
           onChange={(e) => setDetails({ ...details, location: e.target.value })}
           variant="flushed"
@@ -40,17 +40,17 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
       </Box>
 
       <Box w="100%">
-        <Text fontSize="1.2rem" color="#838DE9" fontWeight="500"  textAlign="start">Start</Text>
+        <Text fontSize="1.5rem" color="#838DE9" fontWeight="500"  textAlign="start">Start</Text>
         <DateTimePicker className="picker" calendarClassName="calender" onChange={(e) => setDetails({ ...details, start: e })} value={details.start} />
       </Box>
 
       <Box w="100%">
-        <Text fontSize="1.2rem" color="#838DE9" fontWeight="500"  textAlign="start">End</Text>
+        <Text fontSize="1.5rem" color="#838DE9" fontWeight="500"  textAlign="start">End</Text>
         <DateTimePicker className="picker" calendarClassName="calender" onChange={(e) => setDetails({ ...details, end: e })} value={details.end} />
       </Box>
 
       <Box w="100%">
-        <Text fontSize="1.2rem" color="#838DE9" fontWeight="500"  textAlign="start">Description</Text>
+        <Text fontSize="1.5rem" color="#838DE9" fontWeight="500"  textAlign="start">Description</Text>
         <Textarea
           onChange={(e) => setDetails({ ...details, description: e.target.value })}
           variant="flushed"
@@ -62,7 +62,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
       </Box>
 
       <Box w="100%">
-        <Text fontSize="1.2rem" color="#838DE9" fontWeight="500"  textAlign="start">Capacity</Text>
+        <Text fontSize="1.5rem" color="#838DE9" fontWeight="500"  textAlign="start">Capacity</Text>
 
         <Flex>
           <NumberInput min={1} max={500} maxW='100px' mr='2rem' value={details.capacity}
@@ -96,7 +96,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
         background="#5F54D8"
         color="white"
         borderRadius="1rem"
-        fontSize="1.2rem"
+        fontSize="1.5rem"
         height="3rem"
         w="100%"
         mt="1.5rem"

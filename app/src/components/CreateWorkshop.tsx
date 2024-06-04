@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, VStack, useMediaQuery } from "@chakra-ui/react";
 import { FaArrowCircleRight } from "react-icons/fa";
 import DateTimePicker from "react-datetime-picker";
 
@@ -9,8 +9,11 @@ type Props = {
 }
 
 export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Props) => {
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)')
+
+  
   return (
-    <VStack padding="2rem" spacing="1rem" w="35rem" height="auto" textAlign="center" bg="#13131A" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" border="1px solid #191A2B" borderRadius="1rem">
+    <VStack padding="2rem" spacing="1.2rem" w={isLargerThan600 ? "35rem" : "25rem"} height="auto" textAlign="center" bg="#13131A" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" border="1px solid #191A2B" borderRadius="1.2rem">
       <Text fontSize="1.8rem" color="white" fontWeight="500">
         New Workshop
       </Text>
@@ -21,7 +24,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
           onChange={(e) => setDetails({ ...details, title: e.target.value })}
           variant="flushed"
           color="white"
-          fontSize="1rem"
+          fontSize="1.2rem"
           placeholder="Title"
           borderColor="#414664"
         />
@@ -33,7 +36,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
           onChange={(e) => setDetails({ ...details, location: e.target.value })}
           variant="flushed"
           color="white"
-          fontSize="1rem"
+          fontSize="1.2rem"
           placeholder="Title"
           borderColor="#414664"
         />
@@ -55,7 +58,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
           onChange={(e) => setDetails({ ...details, description: e.target.value })}
           variant="flushed"
           color="white"
-          fontSize="1rem"
+          fontSize="1.2rem"
           placeholder="This is an educational workshop"
           borderColor="#414664"
         />
@@ -95,7 +98,7 @@ export const CreateWorkshop = ({ setDetails, details, handleCreateWorkshop }: Pr
       <Button
         background="#5F54D8"
         color="white"
-        borderRadius="1rem"
+        borderRadius="1.2rem"
         fontSize="1.5rem"
         height="3rem"
         w="100%"

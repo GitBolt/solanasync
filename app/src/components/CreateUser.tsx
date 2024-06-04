@@ -1,5 +1,5 @@
 import { useCustomToast } from "@/hooks/toast";
-import { Box, Button, Flex, Input, InputGroup, InputLeftElement, Text, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, InputGroup, InputLeftElement, Text, Textarea, VStack, useMediaQuery } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaArrowCircleRight, FaInstagram, FaTwitter } from "react-icons/fa";
@@ -14,6 +14,7 @@ export const CreateUser = ({ setDetails, details, handleRegisterUser }: Props) =
   const router = useRouter()
   const toast = useCustomToast()
   const [isLogin, setLogin] = useState<boolean>(false)
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)')
 
   const loginF = async () => {
     try {
@@ -40,7 +41,7 @@ export const CreateUser = ({ setDetails, details, handleRegisterUser }: Props) =
 
 
   return (
-    <VStack padding="2rem" spacing="1.5rem" w="35rem" height="auto" textAlign="center" bg="#13131A" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" border="1px solid #191A2B" borderRadius="1.5rem">
+    <VStack padding="2rem" spacing="1.5rem" w={isLargerThan600 ? "35rem" : "25rem"} height="auto" textAlign="center" bg="#13131A" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" border="1px solid #191A2B" borderRadius="1.5rem">
       <Text fontSize="2rem" color="white" fontWeight="500">
         Create Profile
       </Text>

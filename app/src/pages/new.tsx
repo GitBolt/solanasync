@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Flex,
+  Text,
 } from '@chakra-ui/react';
 import { Navbar } from '@/components/Navbar';
 import 'react-datetime-picker/dist/DateTimePicker.css';
@@ -14,9 +15,9 @@ import { CreateWorkshop } from '@/components/CreateWorkshop';
 
 const WorkshopLandingPage = () => {
   const toast = useCustomToast()
-  const { publicKey } = useWallet()
-  const [userId, setUserId] = useState<string | null>(null)
+  const [existingUserDetails, setExistingUserDetails] = useState<any | null>(null)
   const router = useRouter()
+
 
   const [userDetails, setUserDetails] = useState<any>({
     name: '',
@@ -37,22 +38,26 @@ const WorkshopLandingPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setUserId(null);
-      if (!publicKey) return
+      setExistingUserDetails(null);
       try {
-        const res = await fetch("/api/user/" + publicKey);
+        const localData = localStorage.getItem("data") || '{}'
+        const parsedData = JSON.parse(localData)
+        const res = await fetch("/api/user/" + parsedData.email);
         if (!res.ok) {
-          setUserId(null);
+          setExistingUserDetails(null);
         } else {
           const data = await res.json()
-          setUserId(data._id)
+          setExistingUserDetails({
+            id: data._id,
+            email: data.email
+          })
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
     fetchData();
-  }, [publicKey]);
+  }, []);
 
 
   const handleRegisterUser = async () => {
@@ -63,19 +68,28 @@ const WorkshopLandingPage = () => {
       });
       return;
     }
+
+    const res = await fetch("/api/user/" + userDetails.email);
+    if (res.ok) {
+      toast({ type: "error", message: "Email already taken" })
+      return
+    }
+
     try {
+      console.log('Saving: ', userDetails)
       const response = await fetch('/api/createUser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+        
         body: JSON.stringify({
           name: userDetails.name,
+          password: userDetails.password,
           bio: userDetails.bio,
           twitter: userDetails.twitter,
           instagram: userDetails.instagram,
           email: userDetails.email,
-          publicKey: publicKey
         })
       });
 
@@ -85,7 +99,16 @@ const WorkshopLandingPage = () => {
       }
       toast({ type: "success", message: "Registered User Successfully" })
       const data = await response.json()
-      setUserId(data._id);
+      setExistingUserDetails({
+        id: data._id,
+        email: data.email
+      });
+      localStorage.setItem("data", JSON.stringify({
+        id: data._id,
+        email: userDetails.email,
+        password: userDetails.password,
+        name: userDetails.name
+      }))
     } catch (error) {
       toast({
         message: "User Creation Failed",
@@ -97,6 +120,7 @@ const WorkshopLandingPage = () => {
 
   const handleCreateWorkshop = async () => {
     try {
+      console.log("Saving: ", workshopDetails, "Owner Id: ", existingUserDetails.email, existingUserDetails.id)
       const response = await fetch('/api/createWorkshop', {
         method: 'POST',
         headers: {
@@ -105,11 +129,12 @@ const WorkshopLandingPage = () => {
         body: JSON.stringify({
           location: workshopDetails.location,
           start: workshopDetails.start,
+          description: workshopDetails.description,
           end: workshopDetails.end,
           name: workshopDetails.title,
           capacity: workshopDetails.capacity,
-          ownerPubKey: publicKey,
-          ownerId: userId
+          ownerId: existingUserDetails!.id,
+          owner: existingUserDetails!.email
         })
       });
 
@@ -145,11 +170,12 @@ const WorkshopLandingPage = () => {
         p={12}
         bg="#0E0E10"
       >
-        {!userId ? (
+        {!existingUserDetails ? (
           <CreateUser handleRegisterUser={handleRegisterUser} setDetails={setUserDetails} details={userDetails} />
         ) : (
           <CreateWorkshop handleCreateWorkshop={handleCreateWorkshop} setDetails={setWorkshopDetails} details={workshopDetails} />
         )}
+
       </Flex>
     </>
   );

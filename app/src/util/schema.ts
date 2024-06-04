@@ -1,9 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 
 const UserSchema = new Schema({
-  publicKey: { type: String},
   creationDate: { type: Date, default: Date.now },
   name: { type: String },
+  password: { type: String },
   email: { type: String, unique: true },
   twitter: { type: String },
   instagram: { type: String },
@@ -32,7 +32,6 @@ const WorkshopSchema = new Schema({
   quizMetadata: Schema.Types.Mixed,
   cNFTMetadata: Schema.Types.Mixed,
   owner: { type: String, ref: 'User', required: true },
-  ownerId: { type: String, ref: 'User', required: true },
   links: Schema.Types.Mixed,
   attendees: [{ type: Schema.Types.ObjectId, ref: 'Attendee' }]
 });

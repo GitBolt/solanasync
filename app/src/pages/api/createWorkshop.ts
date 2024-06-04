@@ -5,12 +5,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { name, location, start, end, description, ownerPubKey, ownerId, capacity } = req.body;
+      const { name, location, start, end, description, ownerId, owner, capacity } = req.body;
       if (!name || !location || !start || !end) {
         return res.status(400).json({ message: 'Title, location, start date and end date are required' });
       }
       await dbConnect()
-      const newWorkshop = new Workshop({ name, location, start, end, description, ownerId, owner: ownerPubKey, links: {}, capacity });
+      
+      const newWorkshop = new Workshop({ name, location, start, end, description, ownerId, owner, links: {}, capacity });
       await newWorkshop.save();
 
       res.status(200).json(newWorkshop);

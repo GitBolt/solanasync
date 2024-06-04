@@ -22,7 +22,7 @@ const WorkshopPage = () => {
   useEffect(() => {
 
     const fetchWorkshops = async () => {
-      if (!publicKey || !router.query.id) return;
+      if (!router.query.id) return;
       try {
         const response = await fetch(`/api/workshops/id/${router.query.id}`);
         const data = await response.json();
@@ -53,7 +53,6 @@ const WorkshopPage = () => {
   return (
     <>
       <Navbar />
-      {publicKey ?
        <Flex direction="column" align="center" justify="center" p={isLargerThan600 ? 12 : 5} bg="#0E0E10">
         <Box w={isLargerThan600 ? "60%" : "90%"}>
           <Button
@@ -161,7 +160,7 @@ const WorkshopPage = () => {
             {workshop ? <LinksComponent workshop={workshop} /> : null}
           </Box>
         </Flex>
-      </Flex> : <Center><Text fontSize="3rem" color="white">Connect Wallet Required</Text></Center>}
+      </Flex> 
     </>
   )
 }

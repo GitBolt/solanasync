@@ -9,10 +9,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   dbConnect()
   if (req.method === 'POST') {
     try {
-      const { bio, instagram, twitter, name, email, publicKey } = req.body;
-      const newUser = new User({ email, publicKey, bio, instagram, twitter, name });
+      const { bio, instagram, twitter, name, email, password } = req.body;
+
+      console.log(password)
+      const newUser = new User({
+        email,
+        password,
+        bio,
+        instagram,
+        twitter,
+        name,
+      });
       await newUser.save();
-     
+
       return res.status(200).json(newUser);
     } catch (error) {
       console.log(error)

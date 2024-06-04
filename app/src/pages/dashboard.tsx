@@ -64,15 +64,16 @@ const WorkshopItem = ({ title, start, end, capacity, location, id, nft, quiz }: 
 const WorkshopLandingPage = () => {
   const [upcomingWorkshops, setUpcomingWorkshops] = useState([]);
   const [pastWorkshops, setPastWorkshops] = useState([]);
-  const { publicKey } = useWallet();
+
   const router = useRouter();
 
   
   useEffect(() => {
     const fetchWorkshops = async () => {
-      if (!publicKey) return;
       try {
-        const response = await fetch(`/api/workshops/${publicKey}`);
+        const localData = localStorage.getItem("data") || '{}'
+        const parsedData = JSON.parse(localData)
+        const response = await fetch(`/api/workshops/${parsedData.email}`);
         const data = await response.json();
         const now = new Date();
         const sortedWorkshops = data.workshops.sort((a: any, b: any) => new Date(a.start).getTime() - new Date(b.start).getTime());
@@ -88,7 +89,7 @@ const WorkshopLandingPage = () => {
     };
 
     fetchWorkshops();
-  }, [publicKey]);
+  }, []);
 
   const renderWorkshops = (workshops: any) => (
     <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" }} gap={6}>
@@ -111,7 +112,7 @@ const WorkshopLandingPage = () => {
   return (
     <>
       <Navbar />
-      {publicKey ? <Flex
+       <Flex
         direction="column"
         align="start"
         justify="center"
@@ -146,7 +147,7 @@ const WorkshopLandingPage = () => {
           </Heading>
           {renderWorkshops(pastWorkshops)}
         </VStack>
-      </Flex> : <Center><Text fontSize="2rem" color="white">Connect wallet to get started</Text></Center>}
+      </Flex>
     </>
   );
 };

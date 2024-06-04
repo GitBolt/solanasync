@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading, Text, Icon, Center, Button, FormControl, FormLabel, Input, Divider, useMediaQuery } from '@chakra-ui/react';
-import { FaArrowAltCircleRight, FaArrowLeft, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaArrowAltCircleRight, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { Navbar } from '@/components/Navbar';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/router';
 import { useCustomToast } from '@/hooks/toast';
 import Link from 'next/link';
 
 const RegisterPage = () => {
-  const { publicKey } = useWallet();
   const router = useRouter();
   const [workshop, setWorkshop] = useState<any>({});
   const [host, setHost] = useState<any>({});

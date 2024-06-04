@@ -12,12 +12,10 @@ import {
 import { FiActivity, FiCamera, FiList } from 'react-icons/fi';
 import { Navbar } from '@/components/Navbar';
 import { useRouter } from 'next/router';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { DefaultHead } from '@/components/DefaultHead';
 
 const WorkshopLandingPage = () => {
   const [userExists, setUserExists] = useState<boolean>(false)
-  const { publicKey } = useWallet()
   const router = useRouter()
 
   const [isLargerThan600] = useMediaQuery('(min-width: 600px)')
@@ -26,22 +24,19 @@ const WorkshopLandingPage = () => {
 
     const fetchData = async () => {
       setUserExists(false);
-      if (!publicKey) return
       try {
-        const res = await fetch("/api/user/" + publicKey);
-        if (!res.ok) setUserExists(false)
-        if (res.ok) {
+        const data = localStorage.getItem("data") || '{}'
+        const parsedData = JSON.parse(data)
+        if (parsedData && parsedData.email && parsedData.password) {
           setUserExists(true)
         }
       } catch (error) {
-        console.error("Error fetching workshops:", error);
+        console.error("Error checking user existance", error);
       }
     };
 
     fetchData();
-
-  }, [publicKey]);
-
+  }, []);
 
   return (
     <>
@@ -59,7 +54,7 @@ const WorkshopLandingPage = () => {
             <span style={{ color: "#7B70FF" }}>Supercharge</span> Your Educational Workshops
           </Heading>
           <Text fontSize={isLargerThan600 ? '2rem' :'1.5rem'} color="#9694B6">
-            Conduct your next workshop with ease while making it more fun and more managable
+            Conduct your next workshop with ease while making it more fun and more easy
           </Text>
           <Button
             background="#5F54D8"
@@ -82,21 +77,22 @@ const WorkshopLandingPage = () => {
 
         <Box py={10} mt="3rem">
           <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
-            <Feature
-              icon={FiCamera}
-              title="Gasless NFT For Audience"
-              text="Distribute gasless NFTs by scanning QR powered by Solana pay"
-            />
-            <Feature
-              icon={FiList}
-              title="Conduct On-Chain Quizzes"
-              text="Engage your audience with Solana powered quizzes"
-            />
-            <Feature
+          <Feature
               icon={FiActivity}
               title="Management Dashboard"
               text="Manage and keep track of your workshops with a simple dashboard"
             />
+                 <Feature
+              icon={FiList}
+              title="Conduct Quizzes"
+              text="Engage your audience with on-chain quizzes"
+            />
+            <Feature
+              icon={FiCamera}
+              title="Gasless NFT For Audience"
+              text="Distribute no-cost NFTs by scanning a simple QR code"
+            />
+
           </SimpleGrid>
         </Box>
       </Flex>

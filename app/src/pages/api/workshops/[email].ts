@@ -1,5 +1,6 @@
 import dbConnect from '@/util/db';
-import { User } from '@/util/schema';
+import { Workshop } from '@/util/schema';
+import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Data = {
@@ -11,7 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { publicKey } = req.query;
+  const { email } = req.query;
 
   if (req.method !== 'GET') {
     res.setHeader('Allow', ['GET']);
@@ -19,21 +20,20 @@ export default async function handler(
     return;
   }
 
-  await dbConnect()
-  if (!publicKey || typeof publicKey !== 'string') {
-    return res.status(400).json({ message: 'Public key is required as a route parameter' });
+  if (!email || typeof email !== 'string') {
+    return res.status(400).json({ message: 'emaily is required as a route parameter' });
   }
 
   try {
     await dbConnect();
 
-    const user = await User.findOne({ publicKey });
+    const workshops = await Workshop.find({ owner: email });
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    if (!workshops) {
+      return res.status(404).json({ message: 'Workshops not found' });
     }
 
-    res.status(200).json(user);
+    res.status(200).json({ workshops });
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Internal Server Error' });

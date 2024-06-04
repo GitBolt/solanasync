@@ -29,7 +29,7 @@ export default async function handler(
   try {
 
     const workshop = await Workshop.findOne({ _id: id });
-    const user = await User.findOne({ _id: workshop.ownerId })
+    const user = await User.findOne({ email: workshop.owner })
     if (!workshop || !user) {
       return res.status(404).json({ message: 'Workshop not found' });
     }

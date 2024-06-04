@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         text: "Hey there, you've successfully registered for the workshop! Below are the details:",
         html: `<div style="text-align: center; font-size: 20px; color: #333; background-color: #f0f0f0; padding: 20px;">
         <h1 style="font-size: 28px; color: #007bff;">${title}</h1>
-        <p>Description: <span style="color: #666;">${description || "Beginner's Guide to Learning and Earning on Solana. Covering intro to Solana, development and earning opportunities."}</span></p>
+        <p>Description: <span style="color: #666;">${description || "No description"}</span></p>
         <p>Start Time: <span style="color: #666;">${parsedStartDate}</span></p>
         <p>End Time: <span style="color: #666;">${parsedEndDate}</span></p>
         <p>Capacity: <span style="color: #666;">${capacity}</span></p>

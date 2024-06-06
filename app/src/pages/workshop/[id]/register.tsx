@@ -34,6 +34,7 @@ const RegisterPage = () => {
   };
 
   const [check1240] = useMediaQuery('(max-width: 1240px)')
+  const [check600] = useMediaQuery('(max-width: 600px)')
 
   useEffect(() => {
     const fetchWorkshop = async () => {
@@ -108,29 +109,29 @@ const RegisterPage = () => {
   return (
     <>
       <Navbar />
-      <Flex align="center" justify="center" alignItems="center" justifyContent="center" mt="4rem">
+      <Flex align="center" justify="center" alignItems="center" justifyContent="center" mt={check600 ? "1rem" : "4rem"}>
         <Flex direction={check1240 ? 'column' : 'row'} w="1200px" alignItems="center" justifyContent="center" gap="1rem">
 
-          <Box w={check1240 ? "80%" : "50%"} padding="3rem" mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
-            <Text fontWeight="700" w="100%" textAlign="start" fontSize="3.2rem" color="white">
+          <Box w={check1240 ? "90%" : "50%"} padding={check600 ? "1rem" : "3rem"} mb={4} bg="linear-gradient(180deg, #14141A 0%, #18181E 100%)" boxShadow="0px 3.59px 31.9px 0px rgba(0, 0, 0, 0.50)" borderRadius="1rem" border="1px solid #1C1C27">
+            <Text fontWeight="700" w="100%" textAlign={check600 ? "center" : "start"} fontSize={check600 ? "2.5rem" : "3.2rem"} color="white">
               {workshop.name}
             </Text>
 
-            <Text textAlign="start" color="gray.400" fontSize="2rem">{workshop.description}</Text>
-            <Text fontSize="1.4rem" color="#818599" mt={4}>
+            <Text textAlign={check600 ? "center" : "start"} mt="1rem" color="gray.400" fontSize={check600 ? "1.5rem" : "2rem"}>{workshop.description}</Text>
+            <Text fontSize={check600 ? "1.2rem" : "1.4rem"} color="#818599" mt={5}>
               Starts on: <span style={{ color: 'white' }}>{formatDate(workshop.start)} {' '} {formatTime(workshop.start)}</span>
             </Text>
 
-            <Text fontSize="1.4rem" color="#818599" mt={4}>
+            <Text fontSize={check600 ? "1.2rem" : "1.4rem"} color="#818599" mt={4}>
               Ends on: <span style={{ color: 'white' }}>{formatDate(workshop.end)} {' '} {formatTime(workshop.end)}</span>
             </Text>
 
-            <Text fontSize="1.4rem" color="#818599" mt={2}>
+            <Text fontSize={check600 ? "1.2rem" : "1.4rem"} color="#818599" mt={2}>
               Location: <span style={{ color: 'white' }}>{workshop.location}</span>
             </Text>
 
             <Divider bg="#818599" flex="1" mt="2rem" mb="0.8rem" border="1px solid #2f314f" />
-            <Text fontSize="1.5rem" color="#818599">
+            <Text fontSize={check600 ? "1.4rem" : "1.rem"} color="#818599">
               Hosted By
             </Text>
 
@@ -152,28 +153,27 @@ const RegisterPage = () => {
             <Divider mt="0.8rem" bg="#818599" flex="1" border="1px solid #2f314f" />
 
 
-            <Text fontSize="1.4rem" color="white" mt={4}>
+            <Text fontSize={check600 ? "1.2rem" : "1.4rem"} color="white" mt={4}>
               Registration Count: {workshop?.attendees?.length ? workshop.attendees.length : 0}
             </Text>
           </Box>
 
 
 
-          {new Date(workshop.end) > new Date() ? !success ? <Box w={check1240 ? '80%' : "50%"} p={check1240 ? 2 : 12}>
-            <Center>
-              <Heading as="h1" fontSize="3rem" color="white" mb={8}>
-                Register
-              </Heading>
-            </Center>
+          {new Date(workshop.end) > new Date() ? !success ? <Box mb="3rem" w={check1240 ? '90%' : "50%"} p={check1240 ? 1 : 12}>
+
 
             <form onSubmit={handleSubmit} style={{
-              background: "rgb(28, 31, 41)",
-              padding: "3rem 2rem",
+              background: "linear-gradient(180deg, #14141A 0%, #18181E 100%)",
+              padding: "1rem 2rem",
               borderRadius: "1rem",
 
             }}>
-
-
+              <Center>
+                <Heading as="h1" fontSize={check600 ? "2rem" : "3rem"} color="white" mb={5}>
+                  Register
+                </Heading>
+              </Center>
               <FormControl id="name" mb={4}>
                 <FormLabel color="white">Name</FormLabel>
                 <Input type="text" name="name"
